@@ -26,4 +26,9 @@ public class Client extends User
 
     @Column(name = "client_last_name")
     private String lastName;
+
+    @Override
+    public TypeUser typeUser() {
+        return TypeUser.CLIENT;
+    }
 }
