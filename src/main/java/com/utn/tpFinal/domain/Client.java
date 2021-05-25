@@ -10,21 +10,22 @@ import javax.persistence.Table;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
-@Table(name = "Clients")
+@Table(name = "clients")
 public class Client extends User
 {
-    @Column(name = "client_email")
+
+    @Column(name = "email_client")
     private String email;
 
-    @Column(name = "client_dni")
+    @Column(name = "dni_client")
     private Integer dni;
 
-    @Column(name = "client_first_name")
+    @Column(name = "first_name_client")
     private String firstName;
 
-    @Column(name = "client_last_name")
+    @Column(name = "last_name_client")
     private String lastName;
 
     @Override

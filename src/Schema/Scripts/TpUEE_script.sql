@@ -44,17 +44,6 @@ number_address integer not null,
 constraint pk_id_address primary key (id_address)
 );
 
-create table if not exists residences(
-id_residence integer not null auto_increment,
-dni_client integer,
-id_address integer,
-id_tariff integer,
-constraint fk_dni_client foreign key (dni_client) references clients(dni_client),
-constraint fk_id_address foreign key (id_address) references addresses(id_address),
-constraint fk_id_tariff foreign key (id_tariff) references tariffs(id_tariff),
-constraint pk_id_residence primary key (id_residence)
-);
-
 create table if not exists brands(
 id_brand integer not null auto_increment,
 brand varchar(30) not null,
@@ -83,15 +72,28 @@ id_meter integer not null auto_increment,
 id_model integer not null,
 id_measurement integer not null,
 serial_number varchar(50) not null,
+password varchar(30) not null,
 constraint pk_id_meter primary key (id_meter),
 constraint fk_id_measurement foreign key (id_measurement) references measurements (id_measurement),
 constraint fk_model foreign key (id_model) references models (id_model)
 );
 
+create table if not exists residences(
+id_residence integer not null auto_increment,
+dni_client integer,
+id_address integer,
+id_tariff integer,
+id_meter integer not null,
+constraint fk_dni_client foreign key (dni_client) references clients(dni_client),
+constraint fk_id_address foreign key (id_address) references addresses(id_address),
+constraint fk_id_tariff foreign key (id_tariff) references tariffs(id_tariff),
+constraint fk_id_meter foreign key (id_meter) references meters(id_meter),
+constraint pk_id_residence primary key (id_residence)
+);
+
 create table if not exists invoices(
-id_residence integer,
 id_invoice integer auto_increment,
-id_measurement integer not null,
+id_residence integer not null,
 is_paid boolean not null,
 due_date datetime not null,
 first_read float not null,
@@ -101,6 +103,5 @@ initial_date date not null,
 last_date date not null,
 total_amount float not null,
 constraint fk_id_residence foreign key(id_residence) references residences(id_residence),
-constraint fk_id_measurement_invoice foreign key (id_measurement) references measurements (id_measurement),
 constraint pk_id_invoice primary key (id_invoice)
 );
