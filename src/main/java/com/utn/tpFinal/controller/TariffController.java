@@ -25,12 +25,12 @@ public class TariffController {
     }
 
     @GetMapping("/{idTariff}")
-    public Tariff getTariffById(@PathVariable String idTariff){
+    public Tariff getTariffById(@PathVariable Integer idTariff){
         return  tariffService.getTariffById(idTariff);
     }
 
     @DeleteMapping("/{idTariff}")
-    public void deleteAddressById(@PathVariable String idTariff){
+    public void deleteAddressById(@PathVariable Integer idTariff){
         tariffService.deleteAddressById(idTariff);
     }
 }

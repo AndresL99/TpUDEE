@@ -32,7 +32,7 @@ public abstract class User
     private String userName;
 
     @Column(name = "password")
-    private Integer password;
+    private String password;
 
     @AccessType(AccessType.Type.PROPERTY)
     public abstract TypeUser typeUser();

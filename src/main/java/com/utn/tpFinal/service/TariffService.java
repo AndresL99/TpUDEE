@@ -32,12 +32,12 @@ public class TariffService {
                 .build();
     }
 
-    public Tariff getTariffById(String idTariff) {
+    public Tariff getTariffById(Integer idTariff) {
         return tariffRepository.findById(idTariff)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
     }
 
-    public void deleteAddressById(String idTariff) {
+    public void deleteAddressById(Integer idTariff) {
 
         tariffRepository.deleteById(idTariff);
     }

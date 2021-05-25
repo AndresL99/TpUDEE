@@ -1,7 +1,8 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.AbstractControllerTest;
-import com.utn.tpFinal.service.UserService;
+import com.utn.tpFinal.service.InvoiceService;
+import com.utn.tpFinal.service.MeterService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,20 +11,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static com.utn.tpFinal.Utils.TestUtils.aInvoiceJson;
+import static com.utn.tpFinal.Utils.TestUtils.aMeterJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = UserController.class)
-public class UserControllerTest extends AbstractControllerTest
+@SpringBootTest(classes = InvoiceController.class)
+public class InvoiceControllerTest extends AbstractControllerTest
 {
     @MockBean
-    UserService userService;
+    private InvoiceService invoiceService;
 
     @Test
-    public void getAllUser() throws Exception
-    {
+    public void getAllInvoice() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/user")
+                .get("/invoice")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -31,20 +33,30 @@ public class UserControllerTest extends AbstractControllerTest
     }
 
     @Test
-    public void getUserById() throws Exception {
+    public void getInvoiceById() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/user/1")
+                .get("/invoice/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
     }
 
+    @Test
+    public void addInvoice() throws Exception {
+        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
+                .post("/invoice")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(aInvoiceJson()))
+                .andExpect(status().isOk());
+
+        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+    }
 
     @Test
-    public void addUserBadRequest() throws Exception {
+    public void addInvoiceBadRequest() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/user")
+                .post("/invoice")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 

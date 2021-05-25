@@ -105,3 +105,7 @@ total_amount float not null,
 constraint fk_id_residence foreign key(id_residence) references residences(id_residence),
 constraint pk_id_invoice primary key (id_invoice)
 );
+
+insert into tariffs(id_tariff,name,value) values (1,'R y Entidades de bien público'),(2,'Medianas demandas'),(3,'Grandes demandas'),(4,'Pequeñas demandas');
+insert into brands(id_brand, brand) values (1,'BAW'),(2,'Jieli'),(3,'AOPUTTRIVER'),(4,'Yasorn');
+insert into models(id_model, id_brand, model) values (1,2,'DDS558'),(2,1,'MEKWH5-45'),(3,2,'150-12-00-00011'),(4,2,'150-12-00-00010'),(5,1,'FFKWH9-457'),(6,3,'AP-881E-UK'),(7,4,'YSI115D5-09'),(8,1,'LWEWH5-111'),(9,4,'YOSUOFP-122'),(10,4,'KLRIPX-20'),(11,3,'AC-995M-KL'),(12,3,'AL-661E-ML'),(13,4,'LOWACGK-0092');
