@@ -13,32 +13,21 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "typeUser", visible = true)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Client.class, name ="CLIENT"),
-        @JsonSubTypes.Type(value = Admin.class, name ="ADMIN")
-})
-
 @Entity
 @Table(name = "Users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class User
+public class User
 {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
-    private String userId;
+    private Integer userId;
 
     @Column(name = "user_name")
     private String userName;
 
     @Column(name = "password")
-    private Integer password;
-
-    @AccessType(AccessType.Type.PROPERTY)
-    public abstract TypeUser typeUser();
-
-
+    private String password;
 
 
 

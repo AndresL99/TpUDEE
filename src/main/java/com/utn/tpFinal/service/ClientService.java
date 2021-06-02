@@ -37,12 +37,12 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
-    public void deleteByUserName(String userName) {
-         clientRepository.deleteById(userName);
+    public void deleteById(Integer idUser) {
+         clientRepository.deleteById(idUser);
     }
 
-    public Client getByClientName(String userName) {
-        return clientRepository.findById(userName)
+    public Client getByClientById(Integer idUser) {
+        return clientRepository.findById(idUser)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
     }
 }

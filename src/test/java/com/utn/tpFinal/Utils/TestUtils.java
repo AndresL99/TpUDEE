@@ -73,7 +73,7 @@ public class TestUtils {
 
     public static Client aClient() {
         Client client = new Client();
-        client.setUserId("id_user");
+        client.setUserId(Integer.valueOf("id_user"));
         client.setFirstName("first_name_client");
         client.setLastName("last_name_client");
         client.setUserName("user_name");
@@ -94,7 +94,7 @@ public class TestUtils {
 
     public static Admin aAdmin() {
         Admin admin = new Admin();
-        admin.setUserId("id_user");
+        admin.setUserId(Integer.valueOf("id_user"));
         admin.setFirstName("first_name_admin");
         admin.setLastName("last_name_admin");
         admin.setUserName("user_name");

@@ -32,10 +32,10 @@ public class ClientController {
        return clientService.add(newClient);
     }
 
-    @GetMapping("/{userName}")
-    public ClientDto getClientByName(@PathVariable String userName){
+    @GetMapping("/{id_user}")
+    public ClientDto getClientById(@PathVariable Integer idUser){
 
-        return conversionService.convert(clientService.getByClientName(userName), ClientDto.class);
+        return conversionService.convert(clientService.getByClientById(idUser), ClientDto.class);
     }
 
     @GetMapping
@@ -43,9 +43,9 @@ public class ClientController {
         return clientService.getAll();
     }
 
-    @DeleteMapping("/{userName}")
-    void deleteClientByUserName(@PathVariable String userName){
-        clientService.deleteByUserName(userName);
+    @DeleteMapping("/{id_user}")
+    void deleteClientByUserName(@PathVariable Integer idUser){
+        clientService.deleteById(idUser);
     }
 
 }

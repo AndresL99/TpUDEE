@@ -27,8 +27,4 @@ public class Admin extends User
     @Column(name = "last_name_admin")
     private String lastName;
 
-    @Override
-    public TypeUser typeUser() {
-        return TypeUser.ADMIN;
-    }
 }

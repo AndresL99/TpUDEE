@@ -18,7 +18,7 @@ public class Measurement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_measurement ")
-    private String measurementId;
+    private Integer measurementId;
 
     @Column(name= "measurement_date")
     private Date dateMeasurement;

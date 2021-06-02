@@ -27,15 +27,24 @@ public class UserService
        return userRepository.findAll();
     }
 
-    public User getByUserName(String userName) {
-        return userRepository.findById(userName)
+    public User getByUserById(Integer idUser) {
+        return userRepository.findById(idUser)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
     }
 
-
-    public void deleteUser(String userName)
+    public void deleteUser(Integer idUser)
     {
-        userRepository.deleteById(userName);
+        userRepository.deleteById(idUser);
+    }
+
+    public User getUserByUserName(String userName)
+    {
+        return userRepository.findByUserName(userName);
+    }
+
+    public void deleteByUserName(String userName)
+    {
+        userRepository.deleteByUserName(userName);
     }
 
 

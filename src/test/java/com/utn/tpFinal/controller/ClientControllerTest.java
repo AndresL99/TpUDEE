@@ -24,7 +24,7 @@ public class ClientControllerTest extends AbstractControllerTest
     @Test
     public void getAllClient() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/client")
+                .get("/Client")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -34,7 +34,7 @@ public class ClientControllerTest extends AbstractControllerTest
     @Test
     public void getClientById() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/client/1")
+                .get("/Client/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -44,7 +44,7 @@ public class ClientControllerTest extends AbstractControllerTest
     @Test
     public void addClient() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/client")
+                .post("/Client")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(aClientJson()))
                 .andExpect(status().isOk());
@@ -55,7 +55,7 @@ public class ClientControllerTest extends AbstractControllerTest
     @Test
     public void addClientBadRequest() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/client")
+                .post("/Client")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 

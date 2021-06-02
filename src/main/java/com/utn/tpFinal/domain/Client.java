@@ -39,11 +39,6 @@ public class Client extends User
     private String lastName;
 
 
-    @Override
-    public TypeUser typeUser() {
-        return TypeUser.CLIENT;
-    }
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.LAZY)
     private List<Residence> residenceList;
 

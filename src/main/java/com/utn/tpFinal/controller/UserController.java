@@ -24,18 +24,26 @@ public class UserController
     public List<User> getAll(){
         return userService.getAll();
     }
+    @GetMapping("/{id_user}")
+    public User getUserById(@PathVariable Integer idUser){
+        return userService.getByUserById(idUser);
+    }
+
+    @DeleteMapping("/{id_user}")
+    void deleteUserById(@PathVariable Integer idUser){
+        userService.deleteUser(idUser);
+    }
+
+
     @GetMapping("/{userName}")
-    public User getUserByName(@PathVariable String userName){
-        return userService.getByUserName(userName);
+    public User getUserByUserName(@PathVariable String userName){
+        return userService.getUserByUserName(userName);
     }
 
-    @DeleteMapping("/{username}")
-    void deletUserByUserName(@PathVariable String userName){
-        userService.deleteUser(userName);
+    @DeleteMapping("/{userName}")
+    void deleteUserByUserName(@PathVariable String userName){
+        userService.deleteByUserName(userName);
     }
-
-
-
 
 
 

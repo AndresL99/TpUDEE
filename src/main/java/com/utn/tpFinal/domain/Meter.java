@@ -23,10 +23,10 @@ public class Meter {
     private Integer meterId;
 
     @Column(name = "serial_number")
-    private Integer serialNumber;
+    private String serialNumber;
 
     @Column(name = "password")
-    private Integer password;
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "model", nullable = false, updatable = false)
