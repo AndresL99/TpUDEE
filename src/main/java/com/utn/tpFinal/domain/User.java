@@ -21,6 +21,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "Users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class User
 {
     @Id
@@ -32,7 +33,7 @@ public abstract class User
     private String userName;
 
     @Column(name = "password")
-    private String password;
+    private Integer password;
 
     @AccessType(AccessType.Type.PROPERTY)
     public abstract TypeUser typeUser();

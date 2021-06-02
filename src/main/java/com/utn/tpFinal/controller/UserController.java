@@ -14,6 +14,11 @@ public class UserController
     @Autowired
     private UserService userService;
 
+    @PostMapping
+    public void addUser(@RequestBody User newUser){
+        userService.addUser(newUser);
+    }
+
 
     @GetMapping
     public List<User> getAll(){
@@ -28,6 +33,9 @@ public class UserController
     void deletUserByUserName(@PathVariable String userName){
         userService.deleteUser(userName);
     }
+
+
+
 
 
 

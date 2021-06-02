@@ -23,8 +23,8 @@ public class Residence {
     private Integer residenceId;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="dni_client", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "client", nullable = false, updatable = false)
     @JsonBackReference
     private User client;
 
@@ -36,13 +36,12 @@ public class Residence {
     @JoinColumn(name = "serial_number")
     private Meter meter;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="id_tariff", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "tariff", nullable = false, updatable = false)
     @JsonBackReference
     private Tariff tariff;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_invoice")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "residence", fetch = FetchType.LAZY)
     private List<Invoice> invoiceList;
 
 

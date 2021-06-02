@@ -25,8 +25,6 @@ public class Tariff {
     @Column(name ="value")
     private Float tariffValue;
 
-    @JsonIgnore
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "residence_id")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tariff", fetch = FetchType.LAZY)
     private List<Residence> residenceList;
 }

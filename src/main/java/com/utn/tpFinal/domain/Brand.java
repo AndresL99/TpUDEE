@@ -23,7 +23,10 @@ public class Brand {
     @Column(name = "brand")
     private String brand;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_model")
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "brand", fetch = FetchType.LAZY)
+    //@JoinColumn(name ="brand")
     private List<Model> modelList;
+
+
 }

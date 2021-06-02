@@ -37,8 +37,10 @@ public class TariffService {
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
     }
 
-    public void deleteAddressById(Integer idTariff) {
-
+    public void deleteTariff(Integer idTariff){
         tariffRepository.deleteById(idTariff);
     }
+
+
+
 }

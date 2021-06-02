@@ -1,6 +1,7 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.domain.Invoice;
+import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,8 +20,8 @@ public class InvoiceController {
     }
 
     @PostMapping
-    public void addInvoice(@RequestBody Invoice newInvoice){
-        invoiceService.addInvoice(newInvoice);
+    public PostResponse addInvoice(@RequestBody Invoice newInvoice){
+        return invoiceService.addInvoice(newInvoice);
     }
 
     @GetMapping("/{invoiceId}")
@@ -30,7 +31,6 @@ public class InvoiceController {
 
     @DeleteMapping("/{invoiceId}")
     public void deleteInvoiceById(@PathVariable Integer invoiceId){
-
         invoiceService.deleteInvoceById(invoiceId);
     }
 }

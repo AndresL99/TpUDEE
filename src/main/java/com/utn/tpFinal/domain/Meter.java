@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -22,16 +23,17 @@ public class Meter {
     private Integer meterId;
 
     @Column(name = "serial_number")
-    private String serialNumber;
+    private Integer serialNumber;
 
     @Column(name = "password")
-    private String password;
-/*
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_model", nullable = false)
-    @JsonBackReference
+    private Integer password;
+
+    @ManyToOne
+    @JoinColumn(name = "model", nullable = false, updatable = false)
     private Model model;
-*/
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meter", fetch = FetchType.LAZY)
+    private List<Measurement> measurementList;
+
 
 }

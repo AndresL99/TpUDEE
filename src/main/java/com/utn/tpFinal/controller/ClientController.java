@@ -1,6 +1,7 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.domain.Client;
+import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.ClientDto;
 import com.utn.tpFinal.service.ClientService;
@@ -27,8 +28,8 @@ public class ClientController {
     }
 
     @PostMapping
-    void addClient(@RequestBody Client newClient){
-        clientService.add(newClient);
+    PostResponse addClient(@RequestBody Client newClient){
+       return clientService.add(newClient);
     }
 
     @GetMapping("/{userName}")

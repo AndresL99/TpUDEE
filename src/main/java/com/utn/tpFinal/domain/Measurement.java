@@ -1,5 +1,6 @@
 package com.utn.tpFinal.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,8 @@ public class Measurement {
     @Column(name = "kwh_measurement")
     private Float measurementKwh;
 
+    @ManyToOne
+    @JoinColumn(name = "meter", nullable = false, updatable = false)
+    private Meter meter;
 
 }
