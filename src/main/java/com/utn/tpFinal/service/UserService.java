@@ -3,6 +3,8 @@ package com.utn.tpFinal.service;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,33 +21,17 @@ public class UserService
         this.userRepository = userRepository;
     }
 
-    public void addUser(User newUser){
-        userRepository.save(newUser);
-    }
-
-    public List<User> getAll(){
-       return userRepository.findAll();
-    }
-
-    public User getByUserById(Integer idUser) {
-        return userRepository.findById(idUser)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
-    }
-
-    public void deleteUser(Integer idUser)
+    public User login(String username, String password)
     {
-        userRepository.deleteById(idUser);
+        return userRepository.findByUserNameAndAndPassword(username, password);
     }
 
-    public User getUserByUserName(String userName)
+    public Page<User>getAll(Pageable pageable)
     {
-        return userRepository.findByUserName(userName);
+        return userRepository.findAll(pageable);
     }
 
-    public void deleteByUserName(String userName)
-    {
-        userRepository.deleteByUserName(userName);
-    }
+
 
 
 

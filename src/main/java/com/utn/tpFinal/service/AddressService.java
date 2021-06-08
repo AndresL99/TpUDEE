@@ -2,9 +2,14 @@ package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Address;
 import com.utn.tpFinal.domain.PostResponse;
+import com.utn.tpFinal.exception.AddressExistException;
+import com.utn.tpFinal.exception.AddressNotExistException;
+import com.utn.tpFinal.exception.TariffExistException;
 import com.utn.tpFinal.repository.AddressRepository;
 import com.utn.tpFinal.utils.EntityURLBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -22,18 +27,21 @@ public class AddressService {
         this.addressRepository = addressRepository;
     }
 
-    public PostResponse addAddress(Address newAddress){
-
-        Address a = addressRepository.save(newAddress);
-        return PostResponse
-                .builder()
-                .status(HttpStatus.CREATED)
-                .url(EntityURLBuilder.buildURL(ADDRESS_PATH, a.getAddressId().toString()))
-                .build();
+    public Address addAddress(Address newAddress)throws AddressExistException
+    {
+        if (!addressRepository.existsById(newAddress.getAddressId()))
+        {
+            return addressRepository.save(newAddress);
+        }
+        else
+        {
+            throw new AddressExistException();
+        }
     }
 
 
-    public Address getAddressById(Integer idAddress) {
+    public Address getAddressById(Integer idAddress) throws AddressNotExistException
+    {
         return addressRepository.findById(idAddress)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
     }
@@ -42,7 +50,7 @@ public class AddressService {
         addressRepository.deleteById(idAddress);
     }
 
-    public List<Address> getAll() {
-        return addressRepository.findAll();
+    public Page<Address> getAll(Pageable pageable) {
+        return addressRepository.findAll(pageable);
     }
 }

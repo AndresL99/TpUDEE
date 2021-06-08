@@ -7,6 +7,8 @@ import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.repository.BrandRepository;
 import com.utn.tpFinal.utils.EntityURLBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -26,17 +28,12 @@ public class BrandService {
         this.modelService = modelService;
     }
 
-    public PostResponse save(Brand newBrand) {
-        Brand b = brandRepository.save(newBrand);
-        return PostResponse
-                .builder()
-                .status(HttpStatus.CREATED)
-                .url(EntityURLBuilder.buildURL(BRAND_PATH, b.getBrandId().toString()))
-                .build();
+    public Brand addBrand(Brand newBrand) {
+        return brandRepository.save(newBrand);
     }
 
-    public List<Brand> getAll() {
-        return brandRepository.findAll();
+    public Page<Brand> getAll(Pageable pageable) {
+        return brandRepository.findAll(pageable);
     }
 
     public Brand getBrandById(Integer brandId) {

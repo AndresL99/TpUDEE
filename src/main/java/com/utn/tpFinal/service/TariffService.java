@@ -3,14 +3,20 @@ package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.domain.Tariff;
+import com.utn.tpFinal.exception.TariffExistException;
+import com.utn.tpFinal.exception.TariffNotExistException;
 import com.utn.tpFinal.repository.TariffRepository;
 import com.utn.tpFinal.utils.EntityURLBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.List;
 
 @Service
 public class TariffService {
@@ -23,24 +29,26 @@ public class TariffService {
         this.tariffRepository = tariffRepository;
     }
 
-    public PostResponse addTariff(Tariff newTariff) {
-        Tariff t = tariffRepository.save(newTariff);
-        return PostResponse
-                .builder()
-                .status(HttpStatus.CREATED)
-                .url(EntityURLBuilder.buildURL(TARIFF_PATH, t.getTariffId().toString()))
-                .build();
+    public Tariff addTariff(Tariff newTariff) throws TariffExistException {
+        if (!tariffRepository.existsById(newTariff.getTariffId()))
+        {
+            return tariffRepository.save(newTariff);
+        }
+        else
+        {
+            throw new TariffExistException();
+        }
     }
 
-    public Tariff getTariffById(Integer idTariff) {
+    public Tariff getTariffById(Integer idTariff) throws TariffNotExistException
+    {
         return tariffRepository.findById(idTariff)
                 .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
     }
 
-    public void deleteTariff(Integer idTariff){
-        tariffRepository.deleteById(idTariff);
+    public Page<Tariff>getAllTariff(Pageable pageable)
+    {
+        return tariffRepository.findAll(pageable);
     }
-
-
 
 }

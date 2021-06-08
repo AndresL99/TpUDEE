@@ -1,4 +1,4 @@
-package com.utn.tpFinal.Exception;
+package com.utn.tpFinal.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class RestRespondEntityExceptionHandler extends ResponseEntityExceptionHa
             errors.add(violation.getRootBeanClass().getName() + " " + violation.getMessage());
         }
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
+        com.utn.tpFinal.Exception.ApiError apiError = new com.utn.tpFinal.Exception.ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
 
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getHttpStatus());
     }

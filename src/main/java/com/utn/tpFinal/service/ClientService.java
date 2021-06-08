@@ -3,10 +3,17 @@ package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Client;
 import com.utn.tpFinal.domain.PostResponse;
+import com.utn.tpFinal.domain.Tariff;
 import com.utn.tpFinal.domain.User;
+import com.utn.tpFinal.exception.ClientExistException;
+import com.utn.tpFinal.exception.ClientNotExistException;
+import com.utn.tpFinal.exception.TariffExistException;
+import com.utn.tpFinal.exception.TariffNotExistException;
 import com.utn.tpFinal.repository.ClientRepository;
 import com.utn.tpFinal.utils.EntityURLBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -24,25 +31,31 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public PostResponse add(Client newClient) {
-        Client c = clientRepository.save(newClient);
-        return PostResponse
-                .builder()
-                .status(HttpStatus.CREATED)
-                .url(EntityURLBuilder.buildURL(CLIENT_PATH,c.getUserId().toString()))
-                .build();
+    public Client addClient(Client newClient)throws ClientExistException
+    {
+        if (!clientRepository.existsById(newClient.getUserId()))
+        {
+            return clientRepository.save(newClient);
+        }
+        else
+        {
+            throw new ClientExistException();
+        }
     }
 
-    public List<Client> getAll() {
-        return clientRepository.findAll();
+    public Client getClientById(Integer clientId)throws ClientNotExistException
+    {
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+    }
+
+    public Page<Client> getAllClient(Pageable pageable)
+    {
+        return clientRepository.findAll(pageable);
     }
 
     public void deleteById(Integer idUser) {
          clientRepository.deleteById(idUser);
     }
 
-    public Client getByClientById(Integer idUser) {
-        return clientRepository.findById(idUser)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND));
-    }
 }
