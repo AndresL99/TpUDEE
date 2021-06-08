@@ -1,21 +1,22 @@
 package com.utn.tpFinal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xml.internal.security.algorithms.SignatureAlgorithm;
-import com.utn.tpFinal.domain.Client;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.LoginRequestDTO;
 import com.utn.tpFinal.domain.dto.LoginResponseDTO;
 import com.utn.tpFinal.domain.dto.UserDTO;
 import com.utn.tpFinal.service.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -87,7 +88,7 @@ public class UserController
 
     private String generateToken(UserDTO userDto) {
         try {
-            List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("DEFAULT_USER");
+            List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("EMPLOYEE");
             String token = Jwts
                     .builder()
                     .setId("JWT")
