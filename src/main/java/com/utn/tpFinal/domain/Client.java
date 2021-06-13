@@ -43,7 +43,8 @@ public class Client extends User
     private List<Residence> residenceList;
 
 
-
-
-
+   /* @Override
+    public TypeUser typeUser() {
+        return TypeUser.CLIENT;
+    }*/
 }

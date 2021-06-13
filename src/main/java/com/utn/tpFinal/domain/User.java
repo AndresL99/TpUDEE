@@ -16,7 +16,12 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public class User
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "TypeUser",visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Client.class, name = "Client"),
+        @JsonSubTypes.Type(value = Admin.class, name = "Employee")
+})
+public abstract class User
 {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -29,6 +34,11 @@ public class User
     @Column(name = "password")
     private String password;
 
-
-
+    /*@AccessType(AccessType.Type.PROPERTY)
+    public abstract TypeUser typeUser();
+*/
+    public enum TypeUser{
+        EMPLOYEE,
+        CLIENT
+    }
 }

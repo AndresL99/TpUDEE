@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,6 +36,7 @@ public class TariffController {
         this.conversionService = conversionService;
     }
 
+    @PreAuthorize(value = "hasAuthority('Employee')")
     @PostMapping(consumes = "application/json")
     public ResponseEntity newTariff(@RequestBody Tariff tariff) throws TariffExistException
     {
@@ -47,6 +49,7 @@ public class TariffController {
         return ResponseEntity.created(location).build();
     }
 
+    @PreAuthorize(value = "hasAuthority('Employee')")
     @GetMapping(value = "{tariffId}", produces = "application/json")
     public ResponseEntity<Tariff> getTariffById(@PathVariable("tariffId") Integer tariffId) throws TariffNotExistException
     {
@@ -54,6 +57,7 @@ public class TariffController {
         return ResponseEntity.ok(tariff);
     }
 
+    @PreAuthorize(value = "hasAuthority('Employee')")
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Tariff>> getAllTariff(Pageable pageable) {
         Page page = tariffService.getAllTariff(pageable);
@@ -81,6 +85,15 @@ public class TariffController {
                 header("X-Total-Pages", Long.toString(page.getTotalPages())).
                 body(page.getContent());
 
+    }
+
+    @PreAuthorize(value = "hasAuthority('Employee')")
+    @PutMapping("/tariffId")
+    public ResponseEntity updateTariff(@PathVariable Integer tariffId,
+                                       @RequestBody Tariff tariff)
+    {
+        tariffService.update(tariffId, tariff);
+        return ResponseEntity.accepted().build();
     }
 
 }

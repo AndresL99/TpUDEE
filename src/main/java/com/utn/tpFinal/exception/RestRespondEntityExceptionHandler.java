@@ -25,7 +25,7 @@ public class RestRespondEntityExceptionHandler extends ResponseEntityExceptionHa
             errors.add(violation.getRootBeanClass().getName() + " " + violation.getMessage());
         }
 
-        com.utn.tpFinal.Exception.ApiError apiError = new com.utn.tpFinal.Exception.ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
+        com.utn.tpFinal.exception.ApiError apiError = new com.utn.tpFinal.exception.ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), errors);
 
         return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getHttpStatus());
     }

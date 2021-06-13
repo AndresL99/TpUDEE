@@ -1,10 +1,15 @@
 package com.utn.tpFinal.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.utn.tpFinal.domain.Admin;
+import com.utn.tpFinal.domain.Client;
+import com.utn.tpFinal.domain.TypeUser;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.LoginRequestDTO;
 import com.utn.tpFinal.domain.dto.LoginResponseDTO;
 import com.utn.tpFinal.domain.dto.UserDTO;
+import com.utn.tpFinal.exception.InvalidUserException;
+import com.utn.tpFinal.service.ClientService;
 import com.utn.tpFinal.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,27 +39,31 @@ public class UserController
     private UserService userService;
     private final ModelMapper modelMapper;
     private final ObjectMapper objectMapper;
+    private ClientService clientService;
 
-    public UserController(UserService userService,ModelMapper modelMapper, ObjectMapper objectMapper) {
+    public UserController(UserService userService,ModelMapper modelMapper, ObjectMapper objectMapper, ClientService clientService) {
         this.modelMapper = modelMapper;
         this.userService = userService;
         this.objectMapper = objectMapper;
+        this.clientService = clientService;
     }
 
-    @PostMapping(value = "login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO)
+    @PostMapping(value = "/login")
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) throws InvalidUserException
     {
-        log.info(loginRequestDTO.toString());
-        User user = userService.login(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
-        if (user!=null)
-        {
-            UserDTO dto = modelMapper.map(user, UserDTO.class);
-            return ResponseEntity.ok(LoginResponseDTO.builder().token(this.generateToken(dto)).build());
-        }
-        else
-        {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        UserDTO user = clientService.login(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
+
+        return ResponseEntity.ok(LoginResponseDTO.builder().token(this.generateToken(user,User.TypeUser.CLIENT.name())).build());
+    }
+
+    @PostMapping(value = "/BackOffice/login")
+    public ResponseEntity<LoginResponseDTO> BackOfficelogin(@RequestBody LoginRequestDTO loginRequestDTO) throws InvalidUserException
+    {
+        UserDTO user = userService.login(loginRequestDTO.getUserName(), loginRequestDTO.getPassword());
+
+
+        return ResponseEntity.ok(LoginResponseDTO.builder().token(this.generateToken(user,User.TypeUser.EMPLOYEE.name())).build());
+
     }
 
     @GetMapping(produces = "application/json")
@@ -86,9 +95,9 @@ public class UserController
 
     }
 
-    private String generateToken(UserDTO userDto) {
+    private String generateToken(UserDTO userDto,String authority) {
         try {
-            List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("EMPLOYEE");
+            List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(authority);
             String token = Jwts
                     .builder()
                     .setId("JWT")
@@ -96,11 +105,11 @@ public class UserController
                     .claim("user", objectMapper.writeValueAsString(userDto))
                     .claim("authorities",grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + 1000000))
+                    .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                     .signWith(SignatureAlgorithm.HS512, JWT_SECRET.getBytes()).compact();
             return  token;
         } catch(Exception e) {
-            return "dummy";
+            return null;
         }
 
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TariffService {
@@ -51,4 +52,11 @@ public class TariffService {
         return tariffRepository.findAll(pageable);
     }
 
+    public void update(Integer tariffId, Tariff tariff)
+    {
+        Optional<Tariff> t = tariffRepository.findById(tariffId);
+        tariff.setTariffId(t.get().getTariffId());
+        tariffRepository.save(tariff);
+
+    }
 }
