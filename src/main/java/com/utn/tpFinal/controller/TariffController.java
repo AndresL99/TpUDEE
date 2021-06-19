@@ -31,9 +31,9 @@ public class TariffController {
     private ConversionService conversionService;
 
     @Autowired
-    public TariffController(TariffService tariffService, ConversionService conversionService) {
+    public TariffController(TariffService tariffService) {
         this.tariffService = tariffService;
-        this.conversionService = conversionService;
+        //this.conversionService = conversionService;
     }
 
     @PreAuthorize(value = "hasAuthority('Employee')")

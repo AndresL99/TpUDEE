@@ -4,10 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.utn.tpFinal.domain.*;
 import org.apache.tomcat.jni.Local;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TestUtils {
     public static String aTariffJson() {
@@ -19,14 +24,12 @@ public class TestUtils {
         return gson.toJson(aTariff());
     }
 
-    public static Tariff aTariff() {
-        Tariff tariff = new Tariff();
-        tariff.setTariffId(Integer.valueOf("id_tariff"));
-        tariff.setTariffName("name");
-        tariff.setTariffValue(Float.valueOf("value"));
-        tariff.setResidenceList(new ArrayList<>());
-        return tariff;
+    public static Tariff aTariff()
+    {
+        List<Residence>list = new ArrayList<>();
+        return new Tariff(1,"Pequeña demanda",20.000F,list);
     }
+
 
     public static String aMeterJson() {
         final Gson gson = new GsonBuilder()
@@ -37,12 +40,21 @@ public class TestUtils {
         return gson.toJson(aMeter());
     }
 
+    public static Model aModel()
+    {
+        List<Meter>list = new ArrayList<>();
+        return new Model(1,"Assaf",aBrand(),list);
+    }
+
+    private static Brand aBrand()
+    {
+        List<Model>models = new ArrayList<>();
+        return new Brand(1,"sdasdaaa",models);
+    }
+
     public static Meter aMeter() {
-        Meter meter = new Meter();
-        meter.setMeterId(Integer.valueOf("id_meter"));
-        meter.setSerialNumber("serial_number");
-        meter.setPassword("password");
-        return meter;
+        List<Measurement>measurementList = new ArrayList<>();
+        return new Meter(1,"213123131A","password",aModel(),measurementList);
     }
 
     public static String aAddressJson() {
@@ -55,11 +67,7 @@ public class TestUtils {
     }
 
     public static Address aAddress() {
-        Address address = new Address();
-        address.setAddressId(Integer.valueOf("id_address"));
-        address.setStreetName("name_address");
-        address.setStreetNumber(Integer.valueOf("number_address"));
-        return address;
+        return new Address(1,"Siempre viva",123);
     }
 
     public static String aClientJson() {
@@ -72,15 +80,8 @@ public class TestUtils {
     }
 
     public static Client aClient() {
-        Client client = new Client();
-        client.setUserId(Integer.valueOf("id_user"));
-        client.setFirstName("first_name_client");
-        client.setLastName("last_name_client");
-        client.setUserName("user_name");
-        client.setDni(Integer.valueOf("dni_client"));
-        client.setEmail("email_client");
-        client.setPassword("password");
-        return client;
+        List<Residence>residences = new ArrayList<>();
+        return new Client("andres@gmail.com",41458332,"Andres","Lerner",residences);
     }
 
     public static String aAdminJson() {
@@ -93,15 +94,7 @@ public class TestUtils {
     }
 
     public static Admin aAdmin() {
-        Admin admin = new Admin();
-        admin.setUserId(Integer.valueOf("id_user"));
-        admin.setFirstName("first_name_admin");
-        admin.setLastName("last_name_admin");
-        admin.setUserName("user_name");
-        admin.setDni(Integer.valueOf("dni_admin"));
-        admin.setEmail("email_admin");
-        admin.setPassword("password");
-        return admin;
+        return new Admin("admin@gmail.com",40222444,"Admin","Admin");
     }
 
     public static String aResidenceJson() {
@@ -114,36 +107,55 @@ public class TestUtils {
     }
 
     public static Residence aResidence() {
-        Residence residence = new Residence();
-        residence.setResidenceId(Integer.valueOf("id_residence"));
-        residence.setAddress(new Address());
-        residence.setClient(new Client());
-        residence.setMeter(new Meter());
-        residence.setInvoiceList(new ArrayList<>());
-        return residence;
+        List<Invoice>invoiceList= new ArrayList<>();
+        return new Residence(1,aClient(),aAddress(),aMeter(),aTariff(),invoiceList);
     }
 
-    public static String aInvoiceJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
 
-        return gson.toJson(aInvoice());
+    public static Invoice anInvoice()
+    {
+        return new Invoice(1,
+                true,
+                LocalDate.of(2021,7,21),
+                150.7F,
+                200.2F,
+                1570F,
+                LocalDate.now(),
+                LocalDate.of(2021,6,14),
+                3000F,
+                aResidence());
     }
 
-    public static Invoice aInvoice() {
-        Invoice invoice = new Invoice();
-        invoice.setInvoiceId(Integer.valueOf("id_invoice"));
-        invoice.setIsPaid(Boolean.valueOf("is_paid"));
-        invoice.setFirstReading(Float.valueOf("first_read"));
-        invoice.setLastReading(Float.valueOf("last_read"));
-        invoice.setDuelDate(new Date());
-        invoice.setTotalAmount(Float.valueOf("total_amount"));
-        invoice.setTotalConsumptionKwh(Float.valueOf("total_cons_kw"));
-        invoice.setInitialDate(new Date());
-        invoice.setLastDate(new Date());
-        return invoice;
+    public static Measurement aMeasurement()
+    {
+        return new Measurement(1,LocalDate.now(),10.0F,aMeter());
+    }
+
+    public static Page<Tariff> aTariffPage(){
+        return new PageImpl<>(List.of(aTariff()));
+    }
+
+    public static Pageable aPageable(){
+        return PageRequest.of(0,10);
+    }
+
+    public static Page<Invoice> anInvoicePage(){
+        return new PageImpl<>(List.of(anInvoice()));
+    }
+
+    public static Page<Meter>aMeterPage()
+    {
+        return new PageImpl<>(List.of(aMeter()));
+    }
+
+    public static Page<Residence>aResidencePage()
+    {
+        return new PageImpl<>(List.of(aResidence()));
+    }
+
+    public static Page<Address>anAddressPage()
+    {
+        return new PageImpl<>(List.of(aAddress()));
     }
 
 }

@@ -2,7 +2,9 @@ package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.AbstractControllerTest;
 import com.utn.tpFinal.service.AddressService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -13,18 +15,28 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static com.utn.tpFinal.Utils.TestUtils.aAddressJson;
 import static com.utn.tpFinal.Utils.TestUtils.aResidenceJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = AddressController.class)
 public class AdressControllerTest extends AbstractControllerTest
 {
-    @MockBean
-    private AddressService addressService;
+    @Mock
+    AddressService addressService;
+
+    AddressController addressController;
+
+    @BeforeEach
+    public void setUp()
+    {
+        addressService = mock(AddressService.class);
+        addressController = new AddressController(addressService);
+    }
 
     @Test
     public void getAllAddress() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/address")
+                .get("/Address")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -34,7 +46,7 @@ public class AdressControllerTest extends AbstractControllerTest
     @Test
     public void getAddressById() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/address/1")
+                .get("/Address/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -44,7 +56,7 @@ public class AdressControllerTest extends AbstractControllerTest
     @Test
     public void addAddress() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/address")
+                .post("/Address")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(aAddressJson()))
                 .andExpect(status().isOk());
@@ -55,7 +67,7 @@ public class AdressControllerTest extends AbstractControllerTest
     @Test
     public void addAddressBadRequest() throws Exception {
         final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/address")
+                .post("/Address")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 

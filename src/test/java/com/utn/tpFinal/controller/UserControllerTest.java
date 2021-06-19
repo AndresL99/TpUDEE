@@ -37,36 +37,18 @@ public class UserControllerTest extends AbstractControllerTest
          userController = new UserController(userService,modelMapper,objectMapper, clientService);
      }
 
+     @Test
+    public void loginClientIsOk()
+     {
 
-    @Test
-    public void getAllUser() throws Exception
-    {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/user")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+     }
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
-    }
+     @Test
+     public void loginBackOfficeIsOk()
+     {
 
-    @Test
-    public void getUserById() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/user/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
-    }
+     }
 
 
-    @Test
-    public void addUserBadRequest() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/user")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), resultActions.andReturn().getResponse().getStatus());
-    }
 }

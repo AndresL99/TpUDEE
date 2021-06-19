@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -21,7 +22,7 @@ public class Measurement {
     private Integer measurementId;
 
     @Column(name= "measurement_date")
-    private Date dateMeasurement;
+    private LocalDate dateMeasurement;
 
     @Column(name = "kwh_measurement")
     private Float measurementKwh;
