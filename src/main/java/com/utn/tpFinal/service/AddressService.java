@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressService {
@@ -52,5 +53,12 @@ public class AddressService {
 
     public Page<Address> getAll(Pageable pageable) {
         return addressRepository.findAll(pageable);
+    }
+
+    public void update(Integer addressId, Address address) {
+
+        Optional<Address> a = addressRepository.findById(addressId);
+        address.setAddressId(a.get().getAddressId());
+        addressRepository.save(address);
     }
 }

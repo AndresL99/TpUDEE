@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -34,6 +35,10 @@ public class Meter {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "meter", fetch = FetchType.LAZY)
     private List<Measurement> measurementList;
+
+    @OneToOne(mappedBy = "meter",fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Residence residence;
 
 
 }

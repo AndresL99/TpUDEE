@@ -28,12 +28,12 @@ public class Residence {
     @JsonBackReference
     private User client;
 
-    @OneToOne(cascade = ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @OneToOne(cascade = ALL)
-    @JoinColumn(name = "serial_number")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="id_meter")
     private Meter meter;
 
     @ManyToOne

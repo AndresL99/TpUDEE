@@ -3,6 +3,7 @@ package com.utn.tpFinal.domain;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -23,6 +24,12 @@ public class Address {
 
     @Column(name = "number_address")
     private Integer streetNumber;
+
+    @OneToOne(mappedBy = "address",fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Residence residence;
+
+
 
 
 
