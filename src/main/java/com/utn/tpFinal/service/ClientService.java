@@ -37,7 +37,7 @@ public class ClientService {
 
     public Client addClient(Client newClient)throws ClientExistException
     {
-        if (!clientRepository.existsById(newClient.getUserId()))
+        if (!clientRepository.existsById(newClient.getClientId()))
         {
             return clientRepository.save(newClient);
         }
@@ -58,22 +58,8 @@ public class ClientService {
         return clientRepository.findAll(pageable);
     }
 
-    public void deleteById(Integer idUser) {
-         clientRepository.deleteById(idUser);
-    }
-
-
-    public UserDTO login(String username, String password) throws InvalidUserException {
-        Client client = (Client) userRepository.findByUserNameAndAndPassword(username, password);
-
-        if(client != null)
-        {
-            return modelMapper.map(client,UserDTO.class);
-        }
-        else
-        {
-            throw new InvalidUserException();
-        }
+    public void deleteById(Integer clientId) {
+         clientRepository.deleteById(clientId);
     }
 
 }

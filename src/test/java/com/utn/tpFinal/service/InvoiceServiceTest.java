@@ -1,6 +1,7 @@
 package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Invoice;
+import com.utn.tpFinal.exception.InvoiceExistException;
 import com.utn.tpFinal.exception.InvoiceNotExistExpection;
 import com.utn.tpFinal.repository.InvoiceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,5 +72,14 @@ public class InvoiceServiceTest
         invoiceService.getInvoiceById(anyInt());
 
         verify(invoiceRepository,times(1)).findById(anyInt());
+    }
+
+    @Test
+    public void addInvoiceOk() throws InvoiceExistException {
+        when(invoiceRepository.save(anInvoice())).thenReturn(anInvoice());
+
+        Invoice invoice = invoiceService.addInvoice(anInvoice());
+
+        assertEquals(anInvoice().getFirstReading(),invoice.getFirstReading());
     }
 }

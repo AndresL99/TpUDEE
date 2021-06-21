@@ -1,6 +1,7 @@
 package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Residence;
+import com.utn.tpFinal.exception.ResidenceExistException;
 import com.utn.tpFinal.exception.ResidenceNotExistException;
 import com.utn.tpFinal.repository.ResidenceRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,5 +66,14 @@ public class ResidenceServiceTest
         assertEquals(aResidencePage().getContent().get(0).getClient(),residencePage.getContent().get(0).getClient());
 
         verify(residenceRepository,times(1)).findAll(aPageable());
+    }
+
+    @Test
+    public void addResidenceOk() throws ResidenceExistException {
+        when(residenceRepository.save(aResidence())).thenReturn(aResidence());
+
+        Residence residence = residenceService.addResidence(aResidence());
+
+        assertEquals(aResidence().getResidenceId(),residence.getResidenceId());
     }
 }

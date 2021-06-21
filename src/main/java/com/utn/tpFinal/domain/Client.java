@@ -17,9 +17,13 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "clients")
-public class Client extends User
+public class Client
 {
 
+    @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column(name = "id_client")
+    private Integer clientId;
     @NotNull
     @Email
     @Column(name = "email_client")
@@ -38,13 +42,12 @@ public class Client extends User
     @Column(name = "last_name_client")
     private String lastName;
 
+    @OneToOne
+    @JoinColumn(name = "username",foreignKey = @ForeignKey(name="FK_clients_users"))
+    private User user;
+
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.LAZY)
     private List<Residence> residenceList;
 
-
-   /* @Override
-    public TypeUser typeUser() {
-        return TypeUser.CLIENT;
-    }*/
 }

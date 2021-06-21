@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Builder
 @Table(name = "tariffs")
 public class Tariff {
 
@@ -27,6 +26,7 @@ public class Tariff {
     @Column(name ="value")
     private Float tariffValue;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tariff", fetch = FetchType.LAZY)
-    private List<Residence> residenceList;
+    @OneToOne( fetch = FetchType.EAGER)
+    @JoinColumn(name = "residence_id")
+    private Residence residence;
 }

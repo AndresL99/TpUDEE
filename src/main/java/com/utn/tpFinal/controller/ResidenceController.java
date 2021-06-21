@@ -38,20 +38,20 @@ public class ResidenceController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{residenceId}")
-                .buildAndExpand(r.getResidenceId())
+                .buildAndExpand("Residence/"+r.getResidenceId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "{residenceId}", produces = "application/json")
+    @GetMapping(value = "/{residenceId}", produces = "application/json")
     public ResponseEntity<Residence> getResidenceById(@PathVariable("residenceId") Integer residenceId) throws ResidenceNotExistException
     {
         Residence residence = residenceService.getResidenceById(residenceId);
         return ResponseEntity.ok(residence);
     }
 
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Residence>> allCountries(Pageable pageable) {
+    @GetMapping(produces = "application/json", value = "/")
+    public ResponseEntity<List<Residence>> allResidence(Pageable pageable) {
         Page page = residenceService.getAllResidence(pageable);
         return response(page);
     }

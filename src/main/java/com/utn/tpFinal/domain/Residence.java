@@ -14,7 +14,7 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Residences")
+@Table(name = "residences")
 public class Residence {
 
     @Id
@@ -26,17 +26,17 @@ public class Residence {
     @ManyToOne
     @JoinColumn(name = "client", nullable = false, updatable = false)
     @JsonBackReference
-    private User client;
+    private Client client;
 
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "id_address")
     private Address address;
 
     @OneToOne(cascade = ALL)
-    @JoinColumn(name = "serial_number")
+    @JoinColumn(name = "meter_id")
     private Meter meter;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "tariff", nullable = false, updatable = false)
     @JsonBackReference
     private Tariff tariff;

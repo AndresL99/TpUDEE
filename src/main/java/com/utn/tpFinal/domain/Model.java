@@ -27,10 +27,8 @@ public class Model {
     private String model;
 
 
-    @ManyToOne
-    @JoinColumn(name = "brand", nullable = false, updatable = false)
+    @OneToOne
     private Brand brand;
-
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "model", fetch = FetchType.LAZY)
     private List<Meter> meterList;

@@ -38,19 +38,19 @@ public class MeterController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{meterId}")
-                .buildAndExpand(m.getMeterId())
+                .buildAndExpand("Meter/"+m.getMeterId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "{meterId}", produces = "application/json")
+    @GetMapping(value = "/{meterId}", produces = "application/json")
     public ResponseEntity<Meter> getTariffById(@PathVariable("meterId") Integer meterId)
     {
         Meter meter = meterService.getMeterById(meterId);
         return ResponseEntity.ok(meter);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = "application/json", value = "/")
     public ResponseEntity<List<Meter>> getAllMeter(Pageable pageable) {
         Page page = meterService.getAllMeter(pageable);
         return response(page);

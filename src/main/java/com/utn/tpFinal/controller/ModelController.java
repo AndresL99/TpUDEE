@@ -16,7 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Controller
 @RestController
 @RequestMapping("/Model")
 public class ModelController {
@@ -37,20 +36,20 @@ public class ModelController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{modelId}")
-                .buildAndExpand(model.getModelId())
+                .buildAndExpand("Model/"+model.getModelId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
 
-    @GetMapping(value = "{modelId}", produces = "application/json")
+    @GetMapping(value = "/{modelId}", produces = "application/json")
     public ResponseEntity<Model> getModelById(@PathVariable("modelId") Integer modelId)
     {
         Model model = modelService.getModelById(modelId);
         return ResponseEntity.ok(model);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = "application/json", value = "/")
     public ResponseEntity<List<Model>> getAllModel(Pageable pageable) {
         Page page = modelService.getAllModel(pageable);
         return response(page);

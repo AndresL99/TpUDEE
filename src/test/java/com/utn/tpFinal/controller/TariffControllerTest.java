@@ -25,6 +25,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.utn.tpFinal.Utils.TestUtils.*;
@@ -32,16 +33,15 @@ import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = TariffController.class)
-public class TariffControllerTest extends AbstractControllerTest
+
+public class TariffControllerTest
 {
-    @Mock
-    TariffService tariffService;
-    TariffController tariffController;
+
+    private TariffService tariffService;
+    private TariffController tariffController;
 
     @BeforeEach
     public void setUp()
@@ -100,12 +100,10 @@ public class TariffControllerTest extends AbstractControllerTest
 
             ResponseEntity response = tariffController.newTariff(aTariff());
 
-            assertEquals(
-                    HttpStatus.CREATED.value(),
+            assertEquals(HttpStatus.CREATED.value(),
                     response.getStatusCodeValue());
 
-            assertEquals(
-                    EntityURLBuilder.buildURL("tariffs", String.valueOf(aTariff().getTariffId())).toString(),
+            assertEquals(EntityURLBuilder.buildURL("Tariff", String.valueOf(aTariff().getTariffId())).toString(),
                     response.getHeaders().get("Location").get(0));
         }
         catch (TariffExistException ex)
@@ -113,5 +111,31 @@ public class TariffControllerTest extends AbstractControllerTest
             ex.getMessage();
         }
     }
+
+    @Test
+    public void getAllNotContent()
+    {
+        Pageable pageable = PageRequest.of(5,10);
+        Page<Tariff>pageM = mock(Page.class);
+
+        when(pageM.getContent()).thenReturn(Collections.emptyList());
+        when(tariffService.getAllTariff(pageable)).thenReturn(pageM);
+
+        ResponseEntity<List<Tariff>>responseEntity = tariffController.getAllTariff(pageable);
+
+        assertEquals(HttpStatus.NO_CONTENT,responseEntity.getStatusCode());
+        assertEquals(0,responseEntity.getBody().size());
+    }
+
+    @Test
+    public void updateOK()
+    {
+        ResponseEntity entity = tariffController.updateTariff(aTariff().getTariffId(),aTariff());
+
+        assertEquals(HttpStatus.ACCEPTED.value(),entity.getStatusCodeValue());
+
+        verify(tariffService,times(1)).update(aTariff().getTariffId(),aTariff());
+    }
+
 
 }

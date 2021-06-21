@@ -1,6 +1,7 @@
 package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Tariff;
+import com.utn.tpFinal.exception.TariffExistException;
 import com.utn.tpFinal.exception.TariffNotExistException;
 import com.utn.tpFinal.repository.TariffRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,5 +67,28 @@ public class TariffServiceTest
         assertEquals(aTariffPage().getContent().get(0).getTariffName(),page.getContent().get(0).getTariffName());
 
         verify(tariffRepository,times(1)).findAll(aPageable());
+    }
+
+    @Test
+    public void updateOk()
+    {
+        when(tariffRepository.findById(anyInt())).thenReturn(java.util.Optional.of(aTariff()));
+
+        Tariff t = aTariff();
+        t.setTariffName("Tariff A");
+
+        tariffService.update(aTariff().getTariffId(),t);
+
+        verify(tariffRepository,times(1)).findById(aTariff().getTariffId());
+        verify(tariffRepository,times(1)).save(t);
+    }
+
+    @Test
+    public void addTariffOk() throws TariffExistException {
+        when(tariffRepository.save(aTariff())).thenReturn(aTariff());
+
+        Tariff tariff = tariffService.addTariff(aTariff());
+
+        assertEquals(aTariff().getTariffName(),tariff.getTariffName());
     }
 }

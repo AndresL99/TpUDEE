@@ -45,27 +45,27 @@ public class ClientController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{clientId}")
-                .buildAndExpand(c.getUserId())
+                .buildAndExpand("Client/"+c.getClientId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "{clientId}", produces = "application/json")
+    @GetMapping(value = "/{clientId}", produces = "application/json")
     public ResponseEntity<Client> getClientById(@PathVariable("clientId") Integer clientId) throws ClientNotExistException
     {
         Client client = clientService.getClientById(clientId);
         return ResponseEntity.ok(client);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = "application/json", value = "/")
     public ResponseEntity<List<Client>> getAllClient(Pageable pageable) {
         Page page = clientService.getAllClient(pageable);
         return response(page);
     }
 
     @DeleteMapping(value = "/{id_user}", produces = "application/json")
-    void deleteClientByUserName(@PathVariable Integer idUser){
-        clientService.deleteById(idUser);
+    void deleteClientByUserName(@PathVariable Integer clientId){
+        clientService.deleteById(clientId);
     }
 
     private ResponseEntity response(List list, Page page) {

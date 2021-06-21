@@ -46,7 +46,7 @@ public class BrandService {
     }
 
 
-    public void addModelInBrand(Integer branId, Integer modelId) {
+    /*public void addModelInBrand(Integer branId, Integer modelId) {
 
         Brand brand = getBrandById(branId);
         Model model = modelService.getModelById(modelId);
@@ -54,5 +54,5 @@ public class BrandService {
         brand.getModelList().add(model);
         brandRepository.save(brand);
 
-    }
+    }*/
 }

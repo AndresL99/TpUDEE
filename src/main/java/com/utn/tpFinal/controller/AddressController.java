@@ -46,19 +46,19 @@ public class AddressController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{addressId}")
-                .buildAndExpand(a.getAddressId())
+                .buildAndExpand("Address/"+a.getAddressId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "{addressId}", produces = "application/json")
+    @GetMapping(value = "/{addressId}", produces = "application/json")
     public ResponseEntity<Address> getAddressById(@PathVariable("addressId") Integer addressId) throws AddressNotExistException
     {
         Address address = addressService.getAddressById(addressId);
         return ResponseEntity.ok(address);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = "application/json", value = "/")
     public ResponseEntity<List<Address>> getAllAddress(Pageable pageable) {
         Page page = addressService.getAll(pageable);
         return response(page);

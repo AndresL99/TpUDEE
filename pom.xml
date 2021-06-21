@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.4</version>
+		<version>2.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.utn</groupId>
@@ -14,7 +14,7 @@
 	<name>springboot</name>
 	<description>Hello World with Spring Boot</description>
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -74,7 +74,7 @@
 		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
-			<version>2.4.0</version>
+			<version>2.3.9</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.resilience4j</groupId>
@@ -108,7 +108,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
-			<version>5.4.6</version>
+			<version>5.5.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -122,7 +122,12 @@
 			<version>2.24.0</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.17.2</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -148,8 +153,12 @@
 				<configuration>
 					<excludes>
 						<!-- Exclude full package from test coverage -->
-						<exclude>**/*utn/tpFinal/TpUDEE/domain/**</exclude>
-						<exclude>**/*utn/tpFinal/TpUDEE/exception/**</exclude>
+						<exclude>**/*utn/tpFinal/domain/**</exclude>
+						<exclude>**/*utn/tpFinal/exception/**</exclude>
+						<exclude>**/*utn/tpFinal/utils/**</exclude>
+						<exclude>**/*utn/tpFinal/filterJWT/**</exclude>
+						<exclude>**/*utn/tpFinal/converter/**</exclude>
+						<exclude>**/*utn/tpFinal/configuration/**</exclude>
 					</excludes>
 				</configuration>
 
@@ -203,7 +212,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
                 <configuration>
                     <source>9</source>
                     <target>9</target>

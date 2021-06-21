@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 
 import static com.utn.tpFinal.utils.Constants.*;
 
-public class JWTAuthorizationFilter extends OncePerRequestFilter
-{
+public class JWTAuthorizationFilter extends OncePerRequestFilter {
+
     ObjectMapper objectMapper;
 
     public JWTAuthorizationFilter() {
@@ -97,4 +97,5 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter
             return false;
         return true;
     }
+
 }

@@ -36,19 +36,19 @@ public class InvoiceController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{invoiceId}")
-                .buildAndExpand(i.getInvoiceId())
+                .buildAndExpand("Invoice/"+i.getInvoiceId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "{invoiceId}", produces = "application/json")
+    @GetMapping(value = "/{invoiceId}", produces = "application/json")
     public ResponseEntity<Invoice> getInvoiceById(@PathVariable("invoiceId") Integer invoiceId) throws InvoiceNotExistExpection
     {
         Invoice invoice = invoiceService.getInvoiceById(invoiceId);
         return ResponseEntity.ok(invoice);
     }
 
-    @GetMapping(produces = "application/json")
+    @GetMapping(produces = "application/json", value = "/")
     public ResponseEntity<List<Invoice>> getAllInvoice(Pageable pageable) {
         Page page = invoiceService.getAllInvoice(pageable);
         return response(page);

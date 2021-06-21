@@ -1,6 +1,7 @@
 package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Address;
+import com.utn.tpFinal.exception.AddressExistException;
 import com.utn.tpFinal.exception.AddressNotExistException;
 import com.utn.tpFinal.repository.AddressRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,5 +66,14 @@ public class AddressServiceTest
         assertEquals(anAddressPage().getContent().get(0).getAddressId(),addressPage.getContent().get(0).getAddressId());
 
         verify(addressRepository,times(1)).findAll(aPageable());
+    }
+
+    @Test
+    public void addAddressOk() throws AddressExistException {
+        when(addressRepository.save(aAddress())).thenReturn(aAddress());
+
+        Address address = addressService.addAddress(aAddress());
+
+        assertEquals(aAddress().getAddressId(),address.getAddressId());
     }
 }

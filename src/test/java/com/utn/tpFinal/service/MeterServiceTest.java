@@ -67,6 +67,15 @@ public class MeterServiceTest
         assertEquals(aMeterPage().getContent().get(0).getModel(),page.getContent().get(0).getModel());
 
         verify(meterRepository,times(1)).findAll(aPageable());
+    }
 
+    @Test
+    public void addMeterOk()
+    {
+        when(meterRepository.save(aMeter())).thenReturn(aMeter());
+
+        Meter meter = meterService.addMeter(aMeter());
+
+        assertEquals(aMeter().getSerialNumber(),meter.getSerialNumber());
     }
 }
