@@ -14,30 +14,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TestUtils {
-    public static String aTariffJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
-
-        return gson.toJson(aTariff());
-    }
-
+public class TestUtils
+{
     public static Tariff aTariff()
     {
         List<Residence>list = new ArrayList<>();
         return new Tariff(1,"Pequeña demanda",20.000F,list);
-    }
-
-
-    public static String aMeterJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
-
-        return gson.toJson(aMeter());
     }
 
     public static Model aModel()
@@ -52,61 +34,30 @@ public class TestUtils {
         return new Brand(1,"sdasdaaa",models);
     }
 
-    public static Meter aMeter() {
+    public static Meter aMeter()
+    {
         List<Measurement>measurementList = new ArrayList<>();
         return new Meter(1,"213123131A","password",aModel(),measurementList);
     }
 
-    public static String aAddressJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
-
-        return gson.toJson(aAddress());
-    }
-
-    public static Address aAddress() {
+    public static Address aAddress()
+    {
         return new Address(1,"Siempre viva",123);
     }
 
-    public static String aClientJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
-
-        return gson.toJson(aClient());
-    }
-
-    public static Client aClient() {
+    public static Client aClient()
+    {
         List<Residence>residences = new ArrayList<>();
         return new Client("andres@gmail.com",41458332,"Andres","Lerner",residences);
     }
 
-    public static String aAdminJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
-
-        return gson.toJson(aAdmin());
-    }
-
-    public static Admin aAdmin() {
+    public static Admin aAdmin()
+    {
         return new Admin("admin@gmail.com",40222444,"Admin","Admin");
     }
 
-    public static String aResidenceJson() {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
-                .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
-                .setPrettyPrinting().create();
-
-        return gson.toJson(aResidence());
-    }
-
-    public static Residence aResidence() {
+    public static Residence aResidence()
+    {
         List<Invoice>invoiceList= new ArrayList<>();
         return new Residence(1,aClient(),aAddress(),aMeter(),aTariff(),invoiceList);
     }
@@ -131,15 +82,18 @@ public class TestUtils {
         return new Measurement(1,LocalDate.now(),10.0F,aMeter());
     }
 
-    public static Page<Tariff> aTariffPage(){
-        return new PageImpl<>(List.of(aTariff()));
-    }
-
-    public static Pageable aPageable(){
+    public static Pageable aPageable()
+    {
         return PageRequest.of(0,10);
     }
 
-    public static Page<Invoice> anInvoicePage(){
+    public static Page<Tariff> aTariffPage()
+    {
+        return new PageImpl<>(List.of(aTariff()));
+    }
+
+    public static Page<Invoice> anInvoicePage()
+    {
         return new PageImpl<>(List.of(anInvoice()));
     }
 

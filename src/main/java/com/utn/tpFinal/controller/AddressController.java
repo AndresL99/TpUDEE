@@ -46,7 +46,7 @@ public class AddressController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{addressId}")
-                .buildAndExpand(a.getAddressId())
+                .buildAndExpand("Address/"+a.getAddressId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

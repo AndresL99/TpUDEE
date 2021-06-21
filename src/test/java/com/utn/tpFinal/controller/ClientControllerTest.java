@@ -11,20 +11,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import static com.utn.tpFinal.Utils.TestUtils.aClientJson;
-import static com.utn.tpFinal.Utils.TestUtils.aResidenceJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = ClientController.class)
+
 public class ClientControllerTest extends AbstractControllerTest
 {
-    @Mock
-    ClientService clientService;
 
-    ClientController clientController;
+    private ClientService clientService;
+
+     private ClientController clientController;
 
     @BeforeEach
     public void setUp()
@@ -34,44 +31,5 @@ public class ClientControllerTest extends AbstractControllerTest
     }
 
 
-    @Test
-    public void getAllClient() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/Client")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
-    }
-
-    @Test
-    public void getClientById() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/Client/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
-    }
-
-    @Test
-    public void addClient() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/Client")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(aClientJson()))
-                .andExpect(status().isOk());
-
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
-    }
-
-    @Test
-    public void addClientBadRequest() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/Client")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        assertEquals(HttpStatus.BAD_REQUEST.value(), resultActions.andReturn().getResponse().getStatus());
-    }
 }

@@ -45,7 +45,7 @@ public class ClientController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{clientId}")
-                .buildAndExpand(c.getUserId())
+                .buildAndExpand("Client/"+c.getUserId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

@@ -20,15 +20,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = UserController.class)
+
 public class UserControllerTest extends AbstractControllerTest
 {
-    @Mock
-    UserService userService;
-    UserController userController;
-    ModelMapper modelMapper;
-    ObjectMapper objectMapper;
-    ClientService clientService;
+
+    private UserService userService;
+    private UserController userController;
+    private ModelMapper modelMapper;
+    private ObjectMapper objectMapper;
+    private ClientService clientService;
 
      @BeforeEach
      public void setUp()

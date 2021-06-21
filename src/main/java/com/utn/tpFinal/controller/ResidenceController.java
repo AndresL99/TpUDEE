@@ -38,7 +38,7 @@ public class ResidenceController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{residenceId}")
-                .buildAndExpand(r.getResidenceId())
+                .buildAndExpand("Residence/"+r.getResidenceId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

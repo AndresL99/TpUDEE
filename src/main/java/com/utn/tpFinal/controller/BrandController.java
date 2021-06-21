@@ -37,7 +37,7 @@ public class BrandController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{brandId}")
-                .buildAndExpand(b.getBrandId())
+                .buildAndExpand("Brand/"+b.getBrandId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

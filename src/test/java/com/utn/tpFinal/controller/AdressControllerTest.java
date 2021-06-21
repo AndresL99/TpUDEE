@@ -1,30 +1,45 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.AbstractControllerTest;
+import com.utn.tpFinal.domain.Address;
+import com.utn.tpFinal.exception.AddressExistException;
+import com.utn.tpFinal.exception.AddressNotExistException;
 import com.utn.tpFinal.service.AddressService;
+import com.utn.tpFinal.utils.EntityURLBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static com.utn.tpFinal.Utils.TestUtils.aAddressJson;
-import static com.utn.tpFinal.Utils.TestUtils.aResidenceJson;
+import java.util.Collections;
+import java.util.List;
+
+import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = AddressController.class)
+
 public class AdressControllerTest extends AbstractControllerTest
 {
-    @Mock
-    AddressService addressService;
+    private AddressService addressService;
 
-    AddressController addressController;
+    private AddressController addressController;
 
     @BeforeEach
     public void setUp()
@@ -34,43 +49,61 @@ public class AdressControllerTest extends AbstractControllerTest
     }
 
     @Test
-    public void getAllAddress() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/Address")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void addAddressOk() throws AddressExistException {
+        MockHttpServletRequest mockHttpServletRequest = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockHttpServletRequest));
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+        when(addressService.addAddress(aAddress())).thenReturn(aAddress());
+
+        ResponseEntity responseEntity = addressController.addAddress(aAddress());
+
+        assertEquals(HttpStatus.CREATED.value(),responseEntity.getStatusCodeValue());
+        assertEquals(EntityURLBuilder.buildURL("Address",String.valueOf(aAddress().getAddressId())).toString(), responseEntity.getHeaders().get("Location").get(0));
+
     }
 
     @Test
-    public void getAddressById() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/Address/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void getByIdOk() throws AddressNotExistException
+    {
+        when(addressService.getAddressById(anyInt())).thenReturn(aAddress());
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+        ResponseEntity<Address>addressResponseEntity = addressController.getAddressById(anyInt());
+
+        assertEquals(HttpStatus.OK, addressResponseEntity.getStatusCode());
+        assertEquals(aAddress().getAddressId(),addressResponseEntity.getBody().getAddressId());
     }
 
     @Test
-    public void addAddress() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/Address")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(aAddressJson()))
-                .andExpect(status().isOk());
+    public void getAddressByIdException() throws AddressNotExistException {
+        when(addressService.getAddressById(anyInt())).thenThrow(new AddressNotExistException());
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+        assertThrows(AddressNotExistException.class, () -> {addressController.getAddressById(anyInt());});
     }
 
     @Test
-    public void addAddressBadRequest() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/Address")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+    public void getAllAddressOK()
+    {
+        when(addressService.getAll(any(Pageable.class))).thenReturn(anAddressPage());
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), resultActions.andReturn().getResponse().getStatus());
+        ResponseEntity<List<Address>>responseEntity = addressController.getAllAddress(aPageable());
+
+        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
+        assertEquals(anAddressPage().getTotalElements(), Long.valueOf(responseEntity.getHeaders().get("X-Total-Pages").get(0)));
+        assertEquals(anAddressPage().getContent().get(0).getAddressId(),responseEntity.getBody().get(0).getAddressId());
+    }
+
+    @Test
+    public void getAllAddressNotContent()
+    {
+        Pageable pageable = PageRequest.of(5,10);
+        Page<Address>addressPage = mock(Page.class);
+
+        when(addressPage.getContent()).thenReturn(Collections.emptyList());
+        when(addressService.getAll(pageable)).thenReturn(addressPage);
+
+        ResponseEntity<List<Address>>listResponseEntity = addressController.getAllAddress(pageable);
+
+        assertEquals(HttpStatus.NO_CONTENT, listResponseEntity.getStatusCode());
+        assertEquals(0,listResponseEntity.getBody().size());
     }
 }

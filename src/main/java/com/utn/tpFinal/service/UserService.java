@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.List;
-
 @Service
 public class UserService
 {
@@ -51,6 +49,10 @@ public class UserService
     }
 
 
+    public User getById(Integer idUser)
+    {
+        return userRepository.findById(idUser).orElseThrow(()-> new HttpClientErrorException(HttpStatus.NOT_FOUND));
+    }
 
 
 }

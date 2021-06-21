@@ -1,31 +1,46 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.AbstractControllerTest;
+import com.utn.tpFinal.domain.Meter;
 import com.utn.tpFinal.service.MeterService;
 import com.utn.tpFinal.service.TariffService;
+import com.utn.tpFinal.utils.EntityURLBuilder;
+import org.hibernate.engine.spi.ManagedEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static com.utn.tpFinal.Utils.TestUtils.aMeterJson;
-import static com.utn.tpFinal.Utils.TestUtils.aTariffJson;
+import java.util.Collections;
+import java.util.List;
+
+import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = MeterController.class)
+
 public class MeterControllerTest extends AbstractControllerTest
 {
-    @Mock
-    MeterService meterService;
+    private MeterService meterService;
 
-    MeterController meterController;
+    private MeterController meterController;
 
     @BeforeEach
     public void setUp()
@@ -35,43 +50,62 @@ public class MeterControllerTest extends AbstractControllerTest
     }
 
     @Test
-    public void getAllMeter() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/meter")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void getByIdOk()
+    {
+        when(meterService.getMeterById(anyInt())).thenReturn(aMeter());
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+        ResponseEntity<Meter> response = meterController.getTariffById(anyInt());
+
+        assertEquals(HttpStatus.OK,response.getStatusCode());
+        assertEquals(aMeter().getMeterId(),response.getBody().getMeterId());
     }
 
     @Test
-    public void getMeterById() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .get("/meter/3")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+    public void getByIdNotOk()
+    {
+        when(meterService.getMeterById(anyInt())).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+        assertThrows(HttpClientErrorException.class, ()-> {meterController.getTariffById(anyInt());});
     }
 
     @Test
-    public void addMeter() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/meter")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(aMeterJson()))
-                .andExpect(status().isOk());
+    public void addMeterOk()
+    {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        assertEquals(HttpStatus.OK.value(), resultActions.andReturn().getResponse().getStatus());
+        when(meterService.addMeter(aMeter())).thenReturn(aMeter());
+
+        ResponseEntity responseEntity = meterController.addMeter(aMeter());
+
+        assertEquals(HttpStatus.CREATED.value(),responseEntity.getStatusCodeValue());
+        assertEquals(EntityURLBuilder.buildURL("Meter",String.valueOf(aMeter().getMeterId())).toString(),responseEntity.getHeaders().get("Location").get(0));
     }
 
     @Test
-    public void addMeterBadRequest() throws Exception {
-        final ResultActions resultActions = givenController().perform(MockMvcRequestBuilders
-                .post("/meter")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+    public void getAllMeterOk()
+    {
+        when(meterService.getAllMeter(any(Pageable.class))).thenReturn(aMeterPage());
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), resultActions.andReturn().getResponse().getStatus());
+        ResponseEntity<List<Meter>>entity = meterController.getAllMeter(aPageable());
+
+        assertEquals(HttpStatus.OK, entity.getStatusCode());
+        assertEquals(aMeterPage().getTotalElements(),Long.valueOf(entity.getHeaders().get("X-Total-Pages").get(0)));
+        assertEquals(aMeterPage().getContent().get(0).getMeterId(),entity.getBody().get(0).getMeterId());
+    }
+
+    @Test
+    public void getAllEmpty()
+    {
+        Pageable pageable = PageRequest.of(5,10);
+        Page<Meter>page = mock(Page.class);
+
+        when(page.getContent()).thenReturn(Collections.emptyList());
+        when(meterService.getAllMeter(pageable)).thenReturn(page);
+
+        ResponseEntity<List<Meter>>responseEntity = meterController.getAllMeter(pageable);
+
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
+        assertEquals(0,responseEntity.getBody().size());
     }
 }

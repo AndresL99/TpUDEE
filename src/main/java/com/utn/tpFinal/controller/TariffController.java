@@ -2,10 +2,12 @@ package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.domain.Tariff;
+import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.TariffDto;
 import com.utn.tpFinal.exception.TariffExistException;
 import com.utn.tpFinal.exception.TariffNotExistException;
 import com.utn.tpFinal.service.TariffService;
+import com.utn.tpFinal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -26,6 +29,8 @@ import java.util.List;
 public class TariffController {
 
     private TariffService tariffService;
+
+    private UserService userService;
 
 
     private ConversionService conversionService;
@@ -44,7 +49,7 @@ public class TariffController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{tariffId}")
-                .buildAndExpand(t.getTariffId())
+                .buildAndExpand("Tariff/"+t.getTariffId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
