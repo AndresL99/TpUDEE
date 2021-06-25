@@ -1,6 +1,5 @@
 package com.utn.tpFinal.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.LoginRequestDTO;
@@ -19,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,20 +42,14 @@ public class UserController
         this.objectMapper = objectMapper;
     }
 
-    @PostMapping(value = "login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) throws JsonProcessingException {
-        log.info(loginRequestDTO.toString());
-        User user = userService.getUsernameAndPassword(loginRequestDTO.getUsername(),loginRequestDTO.getPassword());
-        if(user != null)
-        {
-            UserDTO dto = modelMapper.map(user,UserDTO.class);
-            return ResponseEntity.ok(LoginResponseDTO.builder().token(this.generateToken(dto)).build());
-        }
-        else
-        {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid Username.");
-        }
+    @GetMapping(value = "{username}&{password}", produces = "application/json")
+    public ResponseEntity<User>getByUserNameAndPass(@PathVariable("username") String username, @PathVariable("password") String password)
+    {
+        User user = userService.getUsernameAndPassword(username,password);
+        return ResponseEntity.ok(user);
     }
+
+
 
     @GetMapping(produces = "application/json", value = "users")
     public ResponseEntity<List<User>> getAllUser(Pageable pageable) {
@@ -87,20 +80,40 @@ public class UserController
 
     }
 
-    private String generateToken(UserDTO userDto) throws JsonProcessingException {
+    @PostMapping(value = "login")
+    public ResponseEntity<LoginResponseDTO>login(@RequestBody LoginRequestDTO loginRequestDTO)
+    {
+        log.info(loginRequestDTO.toString());
+        User user = userService.getUsernameAndPassword(loginRequestDTO.getUsername(),loginRequestDTO.getPassword());
+        if(user!=null)
+        {
+            UserDTO userDTO = modelMapper.map(user,UserDTO.class);
+            return ResponseEntity.ok(LoginResponseDTO.builder().token(this.generateToken(userDTO)).build());
+        }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
 
-            String authority = userDto.getAdmin() ? AUTH_ADMIN : AUTH_CLIENT;
-            List<GrantedAuthority>grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(authority);
+    private String generateToken(UserDTO user)
+    {
+        try {
+            String authority = user.getAdmin() ? AUTH_ADMIN : AUTH_CLIENT;
+            List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(authority);
             String token = Jwts
                     .builder()
                     .setId("JWT")
-                    .setSubject(userDto.getUsername())
-                    .claim("user", objectMapper.writeValueAsString(userDto))
+                    .setSubject(user.getUsername())
+                    .claim("user", objectMapper.writeValueAsString(user))
                     .claim("authorities",grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                     .setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + 1800000))
                     .signWith(SignatureAlgorithm.HS512, JWT_SECRET.getBytes()).compact();
             return  token;
+        } catch(Exception e) {
+            return "dummy";
+        }
     }
 
 }

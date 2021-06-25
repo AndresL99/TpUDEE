@@ -70,7 +70,7 @@ public class TariffControllerTest
         {
             when(tariffService.getTariffById(anyInt())).thenReturn(aTariff());
 
-            ResponseEntity<Tariff>responseEntity = tariffController.getTariffById(1);
+            ResponseEntity<Tariff>responseEntity = tariffController.getTariffById(anyInt());
 
             assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
             assertEquals(aTariff().getTariffName(), responseEntity.getBody().getTariffName());
@@ -85,7 +85,7 @@ public class TariffControllerTest
     public void getTariffByIdWithExceptionTest() throws TariffNotExistException
     {
             when(tariffService.getTariffById(anyInt())).thenThrow(new TariffNotExistException());
-            assertThrows(TariffNotExistException.class, () -> {tariffController.getTariffById(4);});
+            assertThrows(TariffNotExistException.class, () -> {tariffController.getTariffById(anyInt());});
     }
 
     @Test

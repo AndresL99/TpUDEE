@@ -49,7 +49,7 @@ public class TestUtils
 
     public static User aUser()
     {
-        return new User();
+        return new User("andreslerner","andres123","Andres","Lerner",true);
     }
 
     public static Client aClient()

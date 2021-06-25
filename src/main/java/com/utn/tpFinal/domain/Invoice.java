@@ -30,11 +30,11 @@ public class Invoice {
     private LocalDate duelDate;
 
     @NonNull
-    @Column(name="first_reading")
+    @Column(name="first_read")
     private Float firstReading;
 
     @NonNull
-    @Column(name="last_reading")
+    @Column(name="last_read")
     private Float lastReading;
 
     @NonNull
@@ -55,7 +55,7 @@ public class Invoice {
 
     @NonNull
     @ManyToOne
-    @JoinColumn(name = "residence",nullable = false, updatable = false)
+    @JoinColumn(name = "id_residence",nullable = false, updatable = false)
     @JsonIgnore
     @JsonBackReference
     private Residence residence;

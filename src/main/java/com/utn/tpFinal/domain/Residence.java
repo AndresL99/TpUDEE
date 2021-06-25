@@ -19,12 +19,12 @@ public class Residence {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "residence_id")
+    @Column (name = "id_residence")
     private Integer residenceId;
 
 
     @ManyToOne
-    @JoinColumn(name = "client", nullable = false, updatable = false)
+    @JoinColumn(name = "dni_client", nullable = false, updatable = false)
     @JsonBackReference
     private Client client;
 
@@ -33,11 +33,11 @@ public class Residence {
     private Address address;
 
     @OneToOne(cascade = ALL)
-    @JoinColumn(name = "meter_id")
+    @JoinColumn(name = "id_meter")
     private Meter meter;
 
     @OneToOne
-    @JoinColumn(name = "tariff", nullable = false, updatable = false)
+    @JoinColumn(name = "id_tariff", nullable = false, updatable = false)
     @JsonBackReference
     private Tariff tariff;
 

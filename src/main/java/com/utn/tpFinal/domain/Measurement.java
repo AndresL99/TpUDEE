@@ -28,7 +28,7 @@ public class Measurement {
     private Float measurementKwh;
 
     @ManyToOne
-    @JoinColumn(name = "meter_id", nullable = false, updatable = false)
+    @JoinColumn(name = "id_meter", nullable = false, updatable = false)
     private Meter meter;
 
 }

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO{
-    private String username;
-    private Boolean admin;
+     String username;
+     Boolean admin;
 }

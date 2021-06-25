@@ -43,7 +43,7 @@ public class Client
     private String lastName;
 
     @OneToOne
-    @JoinColumn(name = "username",foreignKey = @ForeignKey(name="FK_clients_users"))
+    @JoinColumn(name = "user_name",foreignKey = @ForeignKey(name="fk_user_name"))
     private User user;
 
 

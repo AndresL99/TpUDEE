@@ -29,10 +29,11 @@ public class Meter {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "model", nullable = false, updatable = false)
+    @JoinColumn(name = "id_model", nullable = false, updatable = false)
     private Model model;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meter", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
     private List<Measurement> measurementList;
 
 

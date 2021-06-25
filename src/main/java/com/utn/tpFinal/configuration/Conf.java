@@ -1,17 +1,21 @@
 package com.utn.tpFinal.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ModelMapperConfig {
+public class Conf {
+
 
     @Bean
     public ModelMapper modelMapper() {
-        final ModelMapper modelMapper = new ModelMapper();
-        modelMapper.getConfiguration().setSkipNullEnabled(true);
+        return new ModelMapper();
+    }
 
-        return modelMapper;
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

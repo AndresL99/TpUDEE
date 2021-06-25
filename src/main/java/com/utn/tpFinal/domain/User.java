@@ -1,5 +1,6 @@
 package com.utn.tpFinal.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,15 @@ public class User
     @Column(name = "user_name")
     private String username;
 
+    @JsonIgnore
     @Column(name = "password")
     private String password;
 
+    @JsonIgnore
     @Column(name = "first_name")
     private String firstName;
 
+    @JsonIgnore
     @Column(name = "last_name")
     private String lastName;
 
