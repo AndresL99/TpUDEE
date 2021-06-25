@@ -44,7 +44,7 @@ public class MeterController {
     }
 
     @GetMapping(value = "{meterId}", produces = "application/json")
-    public ResponseEntity<Meter> getTariffById(@PathVariable("meterId") Integer meterId)
+    public ResponseEntity<Meter> getMeterById(@PathVariable("meterId") Integer meterId)
     {
         Meter meter = meterService.getMeterById(meterId);
         return ResponseEntity.ok(meter);

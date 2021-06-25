@@ -1,9 +1,6 @@
 package com.utn.tpFinal.controller;
 
-import com.utn.tpFinal.domain.Client;
-import com.utn.tpFinal.domain.PostResponse;
-import com.utn.tpFinal.domain.Tariff;
-import com.utn.tpFinal.domain.User;
+import com.utn.tpFinal.domain.*;
 import com.utn.tpFinal.domain.dto.ClientDto;
 import com.utn.tpFinal.exception.ClientExistException;
 import com.utn.tpFinal.exception.ClientNotExistException;
@@ -67,7 +64,6 @@ public class ClientController {
     void deleteClientByUserName(@PathVariable Integer idUser){
         clientService.deleteById(idUser);
     }
-
     private ResponseEntity response(List list, Page page) {
         HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;
         return ResponseEntity.status(status).

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MeterService {
@@ -47,5 +48,12 @@ public class MeterService {
     }
 
 
+    public Meter getMeterBySerialNumber(String serialNumber) {
+        return meterRepository.findBySerialNumber(serialNumber);
+    }
 
+
+    public Optional<Meter> findBySerialNumberAndPassword(String serialNumber, String password) {
+        return meterRepository.findBySerialNumberAndPassword(serialNumber,password);
+    }
 }

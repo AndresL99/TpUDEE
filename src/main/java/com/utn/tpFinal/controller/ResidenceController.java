@@ -26,10 +26,9 @@ import java.util.List;
 public class ResidenceController {
 
     private ResidenceService residenceService;
-
     @Autowired
     public ResidenceController(ResidenceService residenceService) {
-        this.residenceService = residenceService;
+       this.residenceService = residenceService;
     }
 
     @PostMapping(consumes = "application/json")
@@ -52,7 +51,7 @@ public class ResidenceController {
     }
 
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Residence>> allCountries(Pageable pageable) {
+    public ResponseEntity<List<Residence>> allResidence(Pageable pageable) {
         Page page = residenceService.getAllResidence(pageable);
         return response(page);
     }
@@ -74,12 +73,7 @@ public class ResidenceController {
 
     }
 
-    public Page getResidenceByUser(Integer idClient, Pageable pageable)  {
-        return  this.residenceService.getResidenceByClientId(idClient,pageable);
-    }
-    public Residence getResidenceBYMeter(Integer meterId, Pageable pageable){
-        return this.residenceService.getResidenceByMeterId(meterId,pageable);
-    }
+
 
 
 

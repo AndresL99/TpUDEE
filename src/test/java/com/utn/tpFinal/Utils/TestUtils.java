@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.utn.tpFinal.domain.*;
 import org.apache.tomcat.jni.Local;
 
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -138,7 +140,7 @@ public class TestUtils {
         invoice.setIsPaid(Boolean.valueOf("is_paid"));
         invoice.setFirstReading(Float.valueOf("first_read"));
         invoice.setLastReading(Float.valueOf("last_read"));
-        invoice.setDuelDate(new Date());
+        invoice.setDuelDate( new Date() );
         invoice.setTotalAmount(Float.valueOf("total_amount"));
         invoice.setTotalConsumptionKwh(Float.valueOf("total_cons_kw"));
         invoice.setInitialDate(new Date());

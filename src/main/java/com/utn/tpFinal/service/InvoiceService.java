@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Date;
+
 @Service
 public class InvoiceService {
 
@@ -51,5 +53,18 @@ public class InvoiceService {
     public Page<Invoice> getAllInvoice(Pageable pageable)
     {
         return invoiceRepository.findAll(pageable);
+    }
+
+    public Page<Invoice> getInvoiceByRank(Integer idClient, Date start, Date end, Pageable pageable) {
+
+        return invoiceRepository.findByClientBetweenDates(idClient,start,end,pageable);
+    }
+
+    public Page<Invoice> findAllResidenceClientUserId(Integer idClient, Integer idResidences, Pageable pageable) {
+        return invoiceRepository.findAllResidenceClientUserId(idClient,idResidences,pageable);
+    }
+
+    public Page<Invoice> getInvoiceDebt(Integer idClient, Pageable pageable) {
+        return invoiceRepository.findByResidentClientIdIsPaidFalse(idClient,pageable);
     }
 }
