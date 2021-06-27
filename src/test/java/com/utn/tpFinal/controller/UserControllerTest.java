@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.utn.tpFinal.AbstractControllerTest;
 import com.utn.tpFinal.domain.dto.LoginRequestDTO;
 //import com.utn.tpFinal.domain.dto.LoginResponseDTO;
+import com.utn.tpFinal.domain.dto.LoginResponseDTO;
+import com.utn.tpFinal.domain.dto.UserDTO;
 import com.utn.tpFinal.exception.InvalidUserException;
 import com.utn.tpFinal.service.ClientService;
 import com.utn.tpFinal.service.UserService;
@@ -20,10 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static com.utn.tpFinal.Utils.TestUtils.aLoginRequestDTO;
-import static com.utn.tpFinal.Utils.TestUtils.anUserDTO;
+import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,63 +38,34 @@ public class UserControllerTest extends AbstractControllerTest
     private UserController userController;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
+    private LoginRequestDTO loginRequestDTO;
 
      @BeforeEach
      public void setUp()
      {
-         initMocks(this);
+         userService = mock(UserService.class);
+         modelMapper = mock(ModelMapper.class);
+         objectMapper = mock(ObjectMapper.class);
          userController = new UserController(userService,modelMapper,objectMapper);
+         this.loginRequestDTO = LoginRequestDTO.builder().username("admin").password("1234").build();
      }
 
-    /* @Test
-    public void loginClientIsOk()
-     {
-         try
-         {
-             when(clientService.login(anyString(),anyString())).thenReturn(anUserDTO());
+    @Test
+    public void loginOk()
+    {
+        when(userService.getUsernameAndPassword(loginRequestDTO.getUsername(),loginRequestDTO.getPassword())).thenReturn(aUser());
+        when(modelMapper.map(aUser(), UserDTO.class)).thenReturn(anUserDTO());
 
-             ResponseEntity<LoginResponseDTO> loginResponseDTOResponseEntity = userController.login(aLoginRequestDTO());
+        ResponseEntity<LoginResponseDTO>responseEntity = userController.login(loginRequestDTO);
+        assertEquals(HttpStatus.OK.value(),responseEntity.getStatusCodeValue());
+    }
 
-             assertEquals(HttpStatus.OK,loginResponseDTOResponseEntity.getStatusCode());
-             assertNotNull(loginResponseDTOResponseEntity.getBody().getToken());
-
-         }
-         catch (InvalidUserException e)
-         {
-            fail();
-         }
-     }
-
-     @Test
-     public void loginClientNotWithException() throws InvalidUserException {
-        when(clientService.login(anyString(),anyString())).thenThrow(new InvalidUserException());
-
-        assertThrows(InvalidUserException.class, ()-> {userController.login(aLoginRequestDTO());});
-     }*/
-
-     /*@Test
-     public void loginBackOfficeIsOk()
-     {
-        try
-        {
-            when(userService.login(anyString(),anyString())).thenReturn(anUserDTO());
-
-            ResponseEntity<LoginResponseDTO>responseEntity = userController.BackOfficelogin(aLoginRequestDTO());
-
-            assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
-            assertNotNull(responseEntity.getBody().getToken());
-        }
-        catch (InvalidUserException e)
-        {
-           fail();
-        }
-     }*/
-
-     /*@Test
-     public void loginBackOfficeWithException() throws InvalidUserException {
-        when(userService.login(anyString(),anyString())).thenThrow(new InvalidUserException());
-
-        assertThrows(InvalidUserException.class, ()-> {userController.BackOfficelogin(aLoginRequestDTO());});
-     }*/
+    @Test
+    public void loginUnauthorized()
+    {
+        when(userService.getUsernameAndPassword(loginRequestDTO.getUsername(),loginRequestDTO.getPassword())).thenReturn(null);
+        ResponseEntity<LoginResponseDTO> responseEntity =userController.login(loginRequestDTO);
+        assertEquals(HttpStatus.UNAUTHORIZED.value(),responseEntity.getStatusCodeValue());
+    }
 
 }

@@ -15,19 +15,17 @@ import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
+
 public class AddressServiceTest
 {
-    @InjectMocks
     private AddressService addressService;
-
-    @Mock
     private AddressRepository addressRepository;
 
     @BeforeEach
@@ -76,4 +74,25 @@ public class AddressServiceTest
 
         assertEquals(aAddress().getAddressId(),address.getAddressId());
     }
+
+    @Test
+    public void updateAddress()
+    {
+        when(addressRepository.findById(anyInt())).thenReturn(Optional.of(aAddress()));
+        when(addressRepository.save(aAddress())).thenReturn(aAddress());
+
+        addressService.update(10,aAddress());
+
+        verify(addressRepository,times(1)).findById(aAddress().getAddressId());
+        verify(addressRepository,times(1)).save(aAddress());
+    }
+
+    @Test
+    public void deleteAddressOk()
+    {
+        when(addressRepository.existsById(10)).thenReturn(true);
+        addressService.deleteAddressById(10);
+        verify(addressRepository,times(1)).deleteById(10);
+    }
+
 }

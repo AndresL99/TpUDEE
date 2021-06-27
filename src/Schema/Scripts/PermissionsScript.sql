@@ -10,14 +10,9 @@ grant select,insert,update,delete,create,drop on ueeapp.tariffs to 'backOffice';
 grant select,insert,update,delete,create,drop on ueeapp.meters to 'backOffice';
 
 grant select on ueeapp.measurements to 'client';
+grant select on ueeapp.invoices to 'client';
 
+grant insert on ueeapp.measurements to 'meter';
 
-
+grant insert on measurements to 'billing';
 grant execute on procedure m_billing to 'billing';
-
-drop procedure if exists m_billing;
-
-create procedure m_billing()
-begin
-
-end

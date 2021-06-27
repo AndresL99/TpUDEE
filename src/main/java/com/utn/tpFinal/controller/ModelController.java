@@ -42,14 +42,14 @@ public class ModelController {
     }
 
 
-    @GetMapping(value = "/{modelId}", produces = "application/json")
+    @GetMapping(value = "{modelId}", produces = "application/json")
     public ResponseEntity<Model> getModelById(@PathVariable("modelId") Integer modelId)
     {
         Model model = modelService.getModelById(modelId);
         return ResponseEntity.ok(model);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<Model>> getAllModel(Pageable pageable) {
         Page page = modelService.getAllModel(pageable);
         return response(page);

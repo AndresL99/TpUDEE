@@ -42,13 +42,6 @@ public class UserController
         this.objectMapper = objectMapper;
     }
 
-    @GetMapping(value = "{username}&{password}", produces = "application/json")
-    public ResponseEntity<User>getByUserNameAndPass(@PathVariable("username") String username, @PathVariable("password") String password)
-    {
-        User user = userService.getUsernameAndPassword(username,password);
-        return ResponseEntity.ok(user);
-    }
-
 
 
     @GetMapping(produces = "application/json", value = "users")

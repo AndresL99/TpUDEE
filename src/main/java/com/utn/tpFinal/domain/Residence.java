@@ -2,6 +2,7 @@ package com.utn.tpFinal.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,29 +15,30 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "residences")
+@Builder
+@Table(name = "Residences")
 public class Residence {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id_residence")
+    @Column (name = "residence_id")
     private Integer residenceId;
 
 
     @ManyToOne
-    @JoinColumn(name = "dni_client", nullable = false, updatable = false)
+    @JoinColumn(name = "id_client", nullable = false, updatable = false)
     @JsonBackReference
     private Client client;
 
-    @OneToOne(cascade = ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @OneToOne(cascade = ALL)
-    @JoinColumn(name = "id_meter")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="id_meter")
     private Meter meter;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_tariff", nullable = false, updatable = false)
     @JsonBackReference
     private Tariff tariff;

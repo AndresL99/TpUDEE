@@ -30,8 +30,7 @@ import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -55,10 +54,12 @@ public class AdressControllerTest extends AbstractControllerTest
 
         when(addressService.addAddress(aAddress())).thenReturn(aAddress());
 
-        ResponseEntity responseEntity = addressController.addAddress(aAddress());
+        Address responseEntity = addressController.addAddress(aAddress());
 
-        assertEquals(HttpStatus.CREATED.value(),responseEntity.getStatusCodeValue());
-        assertEquals(EntityURLBuilder.buildURL("Address",String.valueOf(aAddress().getAddressId())).toString(), responseEntity.getHeaders().get("Location").get(0));
+        assertEquals(aAddress().getAddressId(),responseEntity.getAddressId());
+
+        //assertEquals(HttpStatus.CREATED.value());
+        //assertEquals(EntityURLBuilder.buildURL("Address",String.valueOf(aAddress().getAddressId())).toString(), responseEntity.getHeaders().get("Location").get(0));
 
     }
 
@@ -67,10 +68,9 @@ public class AdressControllerTest extends AbstractControllerTest
     {
         when(addressService.getAddressById(anyInt())).thenReturn(aAddress());
 
-        ResponseEntity<Address>addressResponseEntity = addressController.getAddressById(anyInt());
+        Address addressResponseEntity = addressController.getAddressById(anyInt());
 
-        assertEquals(HttpStatus.OK, addressResponseEntity.getStatusCode());
-        assertEquals(aAddress().getAddressId(),addressResponseEntity.getBody().getAddressId());
+        assertEquals(aAddress().getAddressId(),addressResponseEntity.getAddressId());
     }
 
     @Test
@@ -85,11 +85,9 @@ public class AdressControllerTest extends AbstractControllerTest
     {
         when(addressService.getAll(any(Pageable.class))).thenReturn(anAddressPage());
 
-        ResponseEntity<List<Address>>responseEntity = addressController.getAllAddress(aPageable());
+        Page page = addressController.getAll(aPageable());
 
-        assertEquals(HttpStatus.OK,responseEntity.getStatusCode());
-        assertEquals(anAddressPage().getTotalElements(), Long.valueOf(responseEntity.getHeaders().get("X-Total-Pages").get(0)));
-        assertEquals(anAddressPage().getContent().get(0).getAddressId(),responseEntity.getBody().get(0).getAddressId());
+        assertEquals(anAddressPage(),page);
     }
 
     @Test
@@ -101,9 +99,22 @@ public class AdressControllerTest extends AbstractControllerTest
         when(addressPage.getContent()).thenReturn(Collections.emptyList());
         when(addressService.getAll(pageable)).thenReturn(addressPage);
 
-        ResponseEntity<List<Address>>listResponseEntity = addressController.getAllAddress(pageable);
+        Page page = addressController.getAll(pageable);
 
-        assertEquals(HttpStatus.NO_CONTENT, listResponseEntity.getStatusCode());
-        assertEquals(0,listResponseEntity.getBody().size());
+        assertEquals(0,page.getContent().size());
+    }
+
+    @Test
+    public void deleteOk()
+    {
+        doNothing().when(addressService).deleteAddressById(anyInt());
+        addressController.deleteAddressById(anyInt());
+    }
+
+    @Test
+    public void updateOk()
+    {
+        addressController.update(aAddress().getAddressId(),aAddress());
+        verify(addressService,times(1)).update(aAddress().getAddressId(),aAddress());
     }
 }

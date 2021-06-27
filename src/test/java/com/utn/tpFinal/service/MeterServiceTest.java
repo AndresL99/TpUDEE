@@ -13,6 +13,8 @@ import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 import static com.utn.tpFinal.Utils.TestUtils.*;
 
 import static org.junit.Assert.assertEquals;
@@ -77,5 +79,29 @@ public class MeterServiceTest
         Meter meter = meterService.addMeter(aMeter());
 
         assertEquals(aMeter().getSerialNumber(),meter.getSerialNumber());
+    }
+
+    @Test
+    public void deleteOk()
+    {
+        when(meterRepository.existsById(anyInt())).thenReturn(true);
+        meterService.deleteById(anyInt());
+        verify(meterRepository,times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    public void getMeterBySerialNumberOk()
+    {
+        when(meterRepository.findBySerialNumber("12314fdfss")).thenReturn(aMeter());
+        Meter meter = meterService.getMeterBySerialNumber("12314fdfss");
+        verify(meterRepository,times(1)).findBySerialNumber("12314fdfss");
+    }
+
+    @Test
+    public void findBySerialNumberAndPasswordOk()
+    {
+        when(meterRepository.findBySerialNumberAndPassword("12314fdfss","1234")).thenReturn(Optional.of(aMeter()));
+        Optional<Meter>meter = meterService.findBySerialNumberAndPassword("12314fdfss","1234");
+        verify(meterRepository,times(1)).findBySerialNumberAndPassword("12314fdfss","1234");
     }
 }

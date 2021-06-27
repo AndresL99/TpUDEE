@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Controller
 @RestController
 @RequestMapping("/Invoice")
 public class InvoiceController {
@@ -41,14 +40,14 @@ public class InvoiceController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "/{invoiceId}", produces = "application/json")
+    @GetMapping(value = "{invoiceId}", produces = "application/json")
     public ResponseEntity<Invoice> getInvoiceById(@PathVariable("invoiceId") Integer invoiceId) throws InvoiceNotExistExpection
     {
         Invoice invoice = invoiceService.getInvoiceById(invoiceId);
         return ResponseEntity.ok(invoice);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<Invoice>> getAllInvoice(Pageable pageable) {
         Page page = invoiceService.getAllInvoice(pageable);
         return response(page);

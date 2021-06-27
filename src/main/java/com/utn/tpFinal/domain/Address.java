@@ -1,8 +1,6 @@
 package com.utn.tpFinal.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -10,7 +8,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name= "addresses" )
+@Builder
+@Table(name= "address" )
 public class Address {
 
     @Id
@@ -23,6 +22,12 @@ public class Address {
 
     @Column(name = "number_address")
     private Integer streetNumber;
+
+    @OneToOne(mappedBy = "address",fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private Residence residence;
+
+
 
 
 

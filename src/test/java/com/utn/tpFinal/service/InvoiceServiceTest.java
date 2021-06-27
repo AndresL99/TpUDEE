@@ -1,9 +1,11 @@
 package com.utn.tpFinal.service;
 
 import com.utn.tpFinal.domain.Invoice;
+import com.utn.tpFinal.domain.dto.ConsumeptionAndCostDTO;
 import com.utn.tpFinal.exception.InvoiceExistException;
 import com.utn.tpFinal.exception.InvoiceNotExistExpection;
 import com.utn.tpFinal.repository.InvoiceRepository;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +17,10 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -82,4 +88,58 @@ public class InvoiceServiceTest
 
         assertEquals(anInvoice().getFirstReading(),invoice.getFirstReading());
     }
+
+    @Test
+    public void deleteInvoice()
+    {
+        when(invoiceRepository.existsById(10)).thenReturn(true);
+        invoiceService.deleteInvoceById(10);
+        verify(invoiceRepository,times(1)).deleteById(10);
+    }
+
+    @SneakyThrows
+    @Test
+    public void getInvoiceByRankOk()
+    {
+        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-04-04 10:10:10");
+        Date end =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-04-21 05:05:15");
+        Integer id_client = aClient().getClientId();
+        when(invoiceRepository.findByClientBetweenDates(id_client,start,end,aPageable())).thenReturn(anInvoicePage());
+        Page<Invoice>invoicePage = invoiceService.getInvoiceByRank(id_client,start,end,aPageable());
+        assertEquals(anInvoicePage(),invoicePage);
+
+    }
+
+    @Test
+    public void getInvoiceDebtTestOk()
+    {
+        when(invoiceRepository.findByResidence_ClientAndIsPaidIsFalse(10,aPageable())).thenReturn(anInvoicePage());
+        Page<Invoice>invoicePage = invoiceService.getInvoiceDebt(10,aPageable());
+        assertEquals(anInvoicePage(),invoicePage);
+    }
+
+    @Test
+    public void findAllResidenceClientUserIdTestOk()
+    {
+        Integer id_client = aClient().getClientId();
+        Integer id_residence = aResidence().getResidenceId();
+        when(invoiceRepository.findAllResidenceClientUserId(id_client,id_residence,aPageable())).thenReturn(anInvoicePage());
+        Page<Invoice>invoicePage = invoiceService.findAllResidenceClientUserId(id_client,id_residence,aPageable());
+        assertEquals(anInvoicePage(),invoicePage);
+    }
+
+    /*@SneakyThrows
+    @Test
+    public void getTotalConsumeAndCostTesOk()
+    {
+        Integer id_client = aClient().getClientId();
+        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2020-05-05 20:15:23");
+        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2020-06-05 19:15:10");
+
+        when(invoiceRepository.findByClientBetweenDates(id_client,start,end,aPageable())).thenReturn(anInvoicePage());
+
+        Page<ConsumeptionAndCostDTO>consumeptionAndCostDTOS = invoiceService.getTotalConsumeAndCost(id_client,start,end,aPageable());
+
+        assertEquals(aConsumeptionAndCostDTOPage().getContent().get(0).getTotalCost(),consumeptionAndCostDTOS.getContent().get(0).getTotalCost());
+    }*/
 }

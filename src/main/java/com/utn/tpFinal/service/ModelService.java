@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 public class ModelService {
 
-    private static final String MODEL_PATH ="Model";
     private ModelRepository modelRepository;
 
     @Autowired

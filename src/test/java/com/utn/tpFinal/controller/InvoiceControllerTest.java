@@ -32,8 +32,7 @@ import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -59,7 +58,7 @@ public class InvoiceControllerTest extends AbstractControllerTest
 
         ResponseEntity responseEntity = invoiceController.addInvoice(anInvoice());
 
-        assertEquals(HttpStatus.CREATED.value(),responseEntity.getStatusCodeValue());
+        assertEquals(HttpStatus. CREATED.value(),responseEntity.getStatusCodeValue());
         assertEquals(EntityURLBuilder.buildURL("Invoice",String.valueOf(anInvoice().getInvoiceId())).toString(), responseEntity.getHeaders().get("Location").get(0));
     }
 
@@ -92,9 +91,9 @@ public class InvoiceControllerTest extends AbstractControllerTest
 
     @Test
     public void getByIdOk() throws InvoiceNotExistExpection {
-        when(invoiceService.getInvoiceById(anyInt())).thenReturn(anInvoice());
+        when(invoiceService.getInvoiceById(1)).thenReturn(anInvoice());
 
-        ResponseEntity<Invoice>responseEntity = invoiceController.getInvoiceById(anyInt());
+        ResponseEntity<Invoice>responseEntity = invoiceController.getInvoiceById(1);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(anInvoice().getFirstReading(),responseEntity.getBody().getFirstReading());
@@ -106,4 +105,14 @@ public class InvoiceControllerTest extends AbstractControllerTest
 
         assertThrows(InvoiceNotExistExpection.class, ()-> {invoiceController.getInvoiceById(anyInt());});
     }
+
+    @Test
+    public void deleteInvoiceIdOk()
+    {
+        Integer id_invoice = anInvoice().getInvoiceId();
+        doNothing().when(invoiceService).deleteInvoceById(id_invoice);
+        invoiceController.deleteInvoiceById(id_invoice);
+        verify(invoiceService,times(1)).deleteInvoceById(id_invoice);
+    }
+
 }

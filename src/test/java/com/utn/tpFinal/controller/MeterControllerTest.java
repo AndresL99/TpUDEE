@@ -54,7 +54,7 @@ public class MeterControllerTest extends AbstractControllerTest
     {
         when(meterService.getMeterById(anyInt())).thenReturn(aMeter());
 
-        ResponseEntity<Meter> response = meterController.getTariffById(anyInt());
+        ResponseEntity<Meter> response = meterController.getMeterById(anyInt());
 
         assertEquals(HttpStatus.OK,response.getStatusCode());
         assertEquals(aMeter().getMeterId(),response.getBody().getMeterId());
@@ -65,7 +65,7 @@ public class MeterControllerTest extends AbstractControllerTest
     {
         when(meterService.getMeterById(anyInt())).thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
-        assertThrows(HttpClientErrorException.class, ()-> {meterController.getTariffById(anyInt());});
+        assertThrows(HttpClientErrorException.class, ()-> {meterController.getMeterById(anyInt());});
     }
 
     @Test

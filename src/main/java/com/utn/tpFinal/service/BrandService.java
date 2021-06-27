@@ -18,7 +18,6 @@ import java.util.List;
 @Service
 public class BrandService {
 
-    private static final String BRAND_PATH ="Brand";
     private BrandRepository brandRepository;
     private ModelService modelService;
 
@@ -46,13 +45,4 @@ public class BrandService {
     }
 
 
-    /*public void addModelInBrand(Integer branId, Integer modelId) {
-
-        Brand brand = getBrandById(branId);
-        Model model = modelService.getModelById(modelId);
-
-        brand.getModelList().add(model);
-        brandRepository.save(brand);
-
-    }*/
 }

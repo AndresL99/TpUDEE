@@ -91,4 +91,5 @@ public class TariffServiceTest
 
         assertEquals(aTariff().getTariffName(),tariff.getTariffName());
     }
+
 }

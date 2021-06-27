@@ -2,14 +2,10 @@ package com.utn.tpFinal.service;
 
 
 import com.utn.tpFinal.domain.Client;
-import com.utn.tpFinal.domain.PostResponse;
-import com.utn.tpFinal.domain.Tariff;
-import com.utn.tpFinal.domain.User;
-import com.utn.tpFinal.domain.dto.UserDTO;
+import com.utn.tpFinal.domain.projection.Top10MoreConsumption;
 import com.utn.tpFinal.exception.*;
 import com.utn.tpFinal.repository.ClientRepository;
 import com.utn.tpFinal.repository.UserRepository;
-import com.utn.tpFinal.utils.EntityURLBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,7 +22,6 @@ public class ClientService {
 
     private ClientRepository clientRepository;
     private UserRepository userRepository;
-    private static final String CLIENT_PATH ="Client";
     private ModelMapper modelMapper;
 
     @Autowired
@@ -58,8 +54,18 @@ public class ClientService {
         return clientRepository.findAll(pageable);
     }
 
-    public void deleteById(Integer clientId) {
-         clientRepository.deleteById(clientId);
+    public void deleteById(Integer idUser) {
+         clientRepository.deleteById(idUser);
+    }
+
+    public List<Top10MoreConsumption> getTop10MoreConsumtion(Date from, Date to) {
+
+        return clientRepository.getTop10(from,to);
+    }
+
+    public Client getByUserName(String username)
+    {
+        return clientRepository.findClientByUser_Username(username);
     }
 
 }

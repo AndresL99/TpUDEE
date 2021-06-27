@@ -2,20 +2,17 @@ package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.domain.Tariff;
-import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.TariffDto;
 import com.utn.tpFinal.exception.TariffExistException;
 import com.utn.tpFinal.exception.TariffNotExistException;
 import com.utn.tpFinal.service.TariffService;
-import com.utn.tpFinal.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
-//import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -29,75 +26,23 @@ import java.util.List;
 public class TariffController {
 
     private TariffService tariffService;
-
-    private UserService userService;
-
-
     private ConversionService conversionService;
 
     @Autowired
-    public TariffController(TariffService tariffService) {
+    public TariffController(TariffService tariffService, ConversionService conversionService) {
         this.tariffService = tariffService;
-        //this.conversionService = conversionService;
+        this.conversionService = conversionService;
     }
-
-
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity newTariff(@RequestBody Tariff tariff) throws TariffExistException
-    {
-        Tariff t = tariffService.addTariff(tariff);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{tariffId}")
-                .buildAndExpand("Tariff/"+t.getTariffId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    //get all
+    public Page<Tariff> getAll(Pageable pageable) { return this.tariffService.getAllTariff(pageable);}
+    //add
+    public Tariff addTariff(@RequestBody Tariff tariff) throws TariffExistException
+    {return tariffService.addTariff(tariff);}
+    //get one
+    public Tariff getTariffById(@PathVariable Integer tariffId) throws TariffNotExistException {
+        return tariffService.getTariffById(tariffId); }
+    //update
+    public void update( @PathVariable Integer tariffId, @RequestBody Tariff tariff) {
+        tariffService.update(tariffId,tariff);
     }
-
-    @GetMapping(value = "/{tariffId}", produces = "application/json")
-    public ResponseEntity<Tariff> getTariffById(@PathVariable("tariffId") Integer tariffId) throws TariffNotExistException
-    {
-        Tariff tariff = tariffService.getTariffById(tariffId);
-        return ResponseEntity.ok(tariff);
-    }
-
-
-    @GetMapping(produces = "application/json", value = "/")
-    public ResponseEntity<List<Tariff>> getAllTariff(Pageable pageable) {
-        Page page = tariffService.getAllTariff(pageable);
-        return response(page);
-    }
-
-    private ResponseEntity response(List list, Page page) {
-        HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;
-        return ResponseEntity.status(status).
-                header("X-Total-Count", Long.toString(page.getTotalElements())).
-                header("X-Total-Pages", Long.toString(page.getTotalPages())).
-                body(page.getContent());
-    }
-
-
-    private ResponseEntity response(List list) {
-        return ResponseEntity.status(list.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK).body(list);
-    }
-
-    private ResponseEntity response(Page page) {
-        HttpStatus httpStatus = page.getContent().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
-        return ResponseEntity.
-                status(httpStatus).
-                header("X-Total-Count", Long.toString(page.getTotalElements())).
-                header("X-Total-Pages", Long.toString(page.getTotalPages())).
-                body(page.getContent());
-
-    }
-
-
-    @PutMapping("/tariffId")
-    public ResponseEntity updateTariff(@PathVariable Integer tariffId,
-                                       @RequestBody Tariff tariff)
-    {
-        tariffService.update(tariffId, tariff);
-        return ResponseEntity.accepted().build();
-    }
-
 }

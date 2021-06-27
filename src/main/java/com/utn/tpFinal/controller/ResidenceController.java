@@ -1,27 +1,24 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.domain.Residence;
-import com.utn.tpFinal.domain.Tariff;
 import com.utn.tpFinal.exception.ResidenceExistException;
 import com.utn.tpFinal.exception.ResidenceNotExistException;
-import com.utn.tpFinal.exception.TariffExistException;
+import com.utn.tpFinal.exception.TariffNotExistException;
 import com.utn.tpFinal.service.ResidenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
 
-@Controller
+
 @RestController
 @RequestMapping("/Residence")
-
 public class ResidenceController {
 
     private ResidenceService residenceService;
@@ -43,14 +40,14 @@ public class ResidenceController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "/{residenceId}", produces = "application/json")
+    @GetMapping(value = "{residenceId}", produces = "application/json")
     public ResponseEntity<Residence> getResidenceById(@PathVariable("residenceId") Integer residenceId) throws ResidenceNotExistException
     {
         Residence residence = residenceService.getResidenceById(residenceId);
         return ResponseEntity.ok(residence);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<Residence>> allResidence(Pageable pageable) {
         Page page = residenceService.getAllResidence(pageable);
         return response(page);
@@ -61,6 +58,25 @@ public class ResidenceController {
 
         residenceService.deleteResidenceById(residenceId);
     }
+
+    @PutMapping("/{residenceId}/Meter/{meterId}")
+    public void addMeter(@PathVariable Integer residenceId, @PathVariable Integer meterId) throws ResidenceNotExistException {
+         residenceService.addMeter(residenceId, meterId);
+
+    }
+    @PutMapping("/{residenceId}/Tariff/{tariffId}")
+    public void addTariff(@PathVariable Integer residenceId, @PathVariable Integer tariffId) throws ResidenceNotExistException, TariffNotExistException {
+        residenceService.addTariff(residenceId, tariffId);
+    }
+
+    /*public Page getResidenceByUser(Integer idClient, Pageable pageable)  {
+        return  this.residenceService.getResidenceByClientId(idClient,pageable);
+    }
+    public Residence getResidenceBYMeter(Integer meterId, Pageable pageable){
+        return this.residenceService.getResidenceByMeterId(meterId,pageable);
+    }*/
+
+
 
     private ResponseEntity response(List list, Page page) {
         HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;
@@ -84,5 +100,6 @@ public class ResidenceController {
                 body(page.getContent());
 
     }
+
 
 }
