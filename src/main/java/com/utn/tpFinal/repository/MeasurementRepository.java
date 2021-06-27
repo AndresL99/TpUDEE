@@ -14,24 +14,27 @@ import java.util.List;
 @Repository
 public interface MeasurementRepository extends JpaRepository<Measurement,Integer> {
 
+
+
     @Query(value = "SELECT m* " +
-            "FROM MEASUREMENTS " +
-            "INNER JOIN METER me " +
+            "FROM measurements " +
+            "INNER JOIN meters me " +
             "ON me.id_measurement = m.id_measurement" +
-            "INNER JOIN RESIDENCES R" +
-            "WHERE R.idResidence = :idResidence AND m.DATE BETWEEN :start AND :end",nativeQuery = true)
+            "INNER JOIN residences r" +
+            "WHERE r.id_residence = :idResidence AND m.measurement_date BETWEEN :start AND :end",nativeQuery = true)
     Page<Measurement> getMeasurementByResidenceAndRank(Integer idResidence, LocalDateTime from, LocalDateTime to, Pageable pageable);
 
 
     @Query(value = "SELECT m* " +
-            "FROM MEASUREMENTS " +
-            "INNER JOIN METER me " +
+            "FROM measurements " +
+            "INNER JOIN meters me " +
             "ON me.id_measurement = m.id_measurement" +
-            "INNER JOIN RESIDENCES R" +
-            "on R.id_meter = M.id_meter" +
-            "INNER JOIN CLIENT C" +
-            "WHERE R.id_user = :idClient AND m.DATE BETWEEN :start AND :end",nativeQuery = true)
+            "INNER JOIN residences r" +
+            "on r.id_meter = m.id_meter" +
+            "INNER JOIN CLIENT c" +
+            "WHERE r.id_client = :idClient AND m.measurement_date BETWEEN :start AND :end",nativeQuery = true)
     Page<Measurement> getMeasuremtByRank(Integer idClient, Date start, Date end ,Pageable pageable);
+
 
 
 }
