@@ -36,15 +36,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Integer> {
     Page<Invoice> findByResidentClientIdIsPaidFalse(Integer idClient, Pageable pageable);
 
 
-    /**
-    @Query(value = "SELECT * FROM INVOICES I " +
-            "JOIN RESIDENCES R ON I.id_residence = R.id_residence " +
-            "JOIN CLIENTS C ON R.dni_client = C.dni_client",nativeQuery = true)
-    Page<Invoice> findByDNIClient(@Param("dni_client")Integer dni, Pageable pageable);
-
-    // web  2) Consulta de facturas por rango de fechas.
-    Page<Invoice> findByClientBetweenDates(Integer userId, Date start, Date end, Pageable pageable);
-    **/
 
 
 

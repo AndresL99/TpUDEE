@@ -1,11 +1,9 @@
 package com.utn.tpFinal.web;
 
-import com.utn.tpFinal.controller.ClientController;
-import com.utn.tpFinal.controller.InvoiceController;
-import com.utn.tpFinal.controller.MeterController;
-import com.utn.tpFinal.controller.ResidenceController;
 import com.utn.tpFinal.domain.Invoice;
+import com.utn.tpFinal.domain.Measurement;
 import com.utn.tpFinal.domain.Residence;
+import com.utn.tpFinal.domain.dto.ConsumeptionAndCostDTO;
 import com.utn.tpFinal.exception.ClientNotExistException;
 import com.utn.tpFinal.service.ClientService;
 import com.utn.tpFinal.service.InvoiceService;
@@ -75,6 +73,29 @@ public class ClientWebController {
 
         Page<Invoice>invoices = invoiceService.getInvoiceDebt(idClient,pageable);
         return response(invoices);
+    }
+    // 4) Consulta de consumo por rango de fechas (el usuario va a ingresar un rango
+    //     * de fechas y quiere saber cuánto consumió en ese periodo en Kwh y dinero)
+
+    @GetMapping("{id}/consumption")
+    public ResponseEntity<ConsumeptionAndCostDTO> getConsumptionAndCost(@PathVariable Integer idClient,
+                                                                        @RequestParam @DateTimeFormat(pattern="MM-yyyy") Date start,
+                                                                        @RequestParam @DateTimeFormat(pattern="MM-yyyy") Date end,
+                                                                        Pageable pageable){
+        Page<ConsumeptionAndCostDTO>consumeAndCost= invoiceService.getTotalConsumeAndCost(idClient,start,end,pageable);
+
+        return response(consumeAndCost);
+    }
+
+    //5) Consulta de mediciones por rango de fechas
+    @GetMapping("{id}/measurement")
+    public ResponseEntity<List<Measurement>>getMeasurementByRank(@PathVariable Integer idClient,
+                                                                 @RequestParam @DateTimeFormat(pattern="MM-yyyy") Date start,
+                                                                 @RequestParam @DateTimeFormat(pattern="MM-yyyy") Date end,
+                                                                 Pageable pageable){
+        Page<Measurement>measurements = measurementService.getMeasurementByRank(idClient,start,end,pageable);
+
+        return response(measurements);
     }
 
 
