@@ -19,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Controller
 @RestController
 @RequestMapping("/Meter")
 public class MeterController {
@@ -38,19 +37,26 @@ public class MeterController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{meterId}")
-                .buildAndExpand("Meter/"+m.getMeterId())
+                .buildAndExpand(m.getMeterId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "/{meterId}", produces = "application/json")
-    public ResponseEntity<Meter> getTariffById(@PathVariable("meterId") Integer meterId)
+    @GetMapping(value = "{meterId}")
+    public ResponseEntity<Meter> getMeterById(@PathVariable("meterId") Integer meterId)
     {
         Meter meter = meterService.getMeterById(meterId);
         return ResponseEntity.ok(meter);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
+    /*@GetMapping(value = "{meterId}", produces = "application/json")
+    public ResponseEntity<Meter> getTariffById(@PathVariable("meterId") Integer meterId)
+    {
+        Meter meter = meterService.getMeterById(meterId);
+        return ResponseEntity.ok(meter);
+    }*/
+
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<Meter>> getAllMeter(Pageable pageable) {
         Page page = meterService.getAllMeter(pageable);
         return response(page);

@@ -23,7 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Controller
 @RestController
 @RequestMapping("/Client")
 public class ClientController {
@@ -45,27 +44,27 @@ public class ClientController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{clientId}")
-                .buildAndExpand("Client/"+c.getClientId())
+                .buildAndExpand("Client"+c.getClientId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "/{clientId}", produces = "application/json")
+    @GetMapping(value = "{clientId}", produces = "application/json")
     public ResponseEntity<Client> getClientById(@PathVariable("clientId") Integer clientId) throws ClientNotExistException
     {
         Client client = clientService.getClientById(clientId);
         return ResponseEntity.ok(client);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<Client>> getAllClient(Pageable pageable) {
         Page page = clientService.getAllClient(pageable);
         return response(page);
     }
 
     @DeleteMapping(value = "/{id_user}", produces = "application/json")
-    void deleteClientByUserName(@PathVariable Integer clientId){
-        clientService.deleteById(clientId);
+    void deleteClientByUserName(@PathVariable Integer idUser){
+        clientService.deleteById(idUser);
     }
 
     private ResponseEntity response(List list, Page page) {

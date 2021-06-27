@@ -6,6 +6,7 @@ import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.domain.Tariff;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.UserDTO;
+import com.utn.tpFinal.domain.projection.Top10MoreConsumption;
 import com.utn.tpFinal.exception.*;
 import com.utn.tpFinal.repository.ClientRepository;
 import com.utn.tpFinal.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -58,8 +60,18 @@ public class ClientService {
         return clientRepository.findAll(pageable);
     }
 
-    public void deleteById(Integer clientId) {
-         clientRepository.deleteById(clientId);
+    public void deleteById(Integer idUser) {
+         clientRepository.deleteById(idUser);
+    }
+
+    public List<Top10MoreConsumption> getTop10MoreConsumtion(LocalDateTime from, LocalDateTime to) {
+
+        return clientRepository.getTop10(from,to);
+    }
+
+    public Client getByUserName(String username)
+    {
+        return clientRepository.findByUsername(username);
     }
 
 }

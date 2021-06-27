@@ -39,12 +39,12 @@ public class TestUtils
     public static Meter aMeter()
     {
         List<Measurement>measurementList = new ArrayList<>();
-        return new Meter(1,"213123131A","password",aModel(),measurementList);
+        return new Meter(1,"213123131A","password",aModel(),measurementList,aResidence());
     }
 
     public static Address aAddress()
     {
-        return new Address(1,"Siempre viva",123);
+        return new Address(1,"Siempre viva",123,aResidence());
     }
 
     public static User aUser()

@@ -14,12 +14,12 @@ import static javax.persistence.CascadeType.ALL;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "residences")
+@Table(name = "Residences")
 public class Residence {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "id_residence")
+    @Column (name = "residence_id")
     private Integer residenceId;
 
 
@@ -28,15 +28,15 @@ public class Residence {
     @JsonBackReference
     private Client client;
 
-    @OneToOne(cascade = ALL)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @OneToOne(cascade = ALL)
-    @JoinColumn(name = "id_meter")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name ="id_meter")
     private Meter meter;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_tariff", nullable = false, updatable = false)
     @JsonBackReference
     private Tariff tariff;

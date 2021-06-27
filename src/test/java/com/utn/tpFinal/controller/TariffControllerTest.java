@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+/*
 public class TariffControllerTest
 {
 
@@ -136,6 +136,4 @@ public class TariffControllerTest
 
         verify(tariffService,times(1)).update(aTariff().getTariffId(),aTariff());
     }
-
-
-}
+*/

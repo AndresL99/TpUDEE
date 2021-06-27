@@ -23,7 +23,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Controller
 @RestController
 @RequestMapping("/Address")
 public class AddressController {
@@ -39,59 +38,24 @@ public class AddressController {
         this.addressService = addressService;
     }
 
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity addAddress(@RequestBody Address address) throws AddressExistException
-    {
-        Address a = addressService.addAddress(address);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{addressId}")
-                .buildAndExpand("Address/"+a.getAddressId())
-                .toUri();
-        return ResponseEntity.created(location).build();
+    public Address addAddress(Address address) throws AddressExistException {
+        return addressService.addAddress(address);
     }
 
-    @GetMapping(value = "/{addressId}", produces = "application/json")
-    public ResponseEntity<Address> getAddressById(@PathVariable("addressId") Integer addressId) throws AddressNotExistException
-    {
-        Address address = addressService.getAddressById(addressId);
-        return ResponseEntity.ok(address);
+    public Page getAll(Pageable pageable) {
+        return this.addressService.getAll(pageable);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
-    public ResponseEntity<List<Address>> getAllAddress(Pageable pageable) {
-        Page page = addressService.getAll(pageable);
-        return response(page);
+    public Address getAddressById(Integer addressId) throws AddressNotExistException {
+        return addressService.getAddressById(addressId);
     }
 
-    @DeleteMapping("/{idAddress}")
-    public void deleteAddressById(@PathVariable Integer idAddress){
+    public void deleteAddressById(Integer idAddress) {
         addressService.deleteAddressById(idAddress);
     }
 
 
-    private ResponseEntity response(List list, Page page) {
-        HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;
-        return ResponseEntity.status(status).
-                header("X-Total-Count", Long.toString(page.getTotalElements())).
-                header("X-Total-Pages", Long.toString(page.getTotalPages())).
-                body(page.getContent());
+    public void update(Integer addressId, Address address) {
+        addressService.update(addressId,address);
     }
-
-
-    private ResponseEntity response(List list) {
-        return ResponseEntity.status(list.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK).body(list);
-    }
-
-    private ResponseEntity response(Page page) {
-        HttpStatus httpStatus = page.getContent().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
-        return ResponseEntity.
-                status(httpStatus).
-                header("X-Total-Count", Long.toString(page.getTotalElements())).
-                header("X-Total-Pages", Long.toString(page.getTotalPages())).
-                body(page.getContent());
-
-    }
-
-
 }

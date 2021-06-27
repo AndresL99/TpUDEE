@@ -59,7 +59,7 @@ public class InvoiceControllerTest extends AbstractControllerTest
 
         ResponseEntity responseEntity = invoiceController.addInvoice(anInvoice());
 
-        assertEquals(HttpStatus.CREATED.value(),responseEntity.getStatusCodeValue());
+        assertEquals(HttpStatus. CREATED.value(),responseEntity.getStatusCodeValue());
         assertEquals(EntityURLBuilder.buildURL("Invoice",String.valueOf(anInvoice().getInvoiceId())).toString(), responseEntity.getHeaders().get("Location").get(0));
     }
 

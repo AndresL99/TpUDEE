@@ -18,7 +18,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-@Controller
 @RestController
 @RequestMapping("/Brand")
 public class BrandController {
@@ -37,28 +36,23 @@ public class BrandController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{brandId}")
-                .buildAndExpand("Brand/"+b.getBrandId())
+                .buildAndExpand(b.getBrandId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "/{brandId}", produces = "application/json")
+    @GetMapping(value = "{brandId}", produces = "application/json")
     public ResponseEntity<Brand> getBrandById(@PathVariable("brandId") Integer brandId)
     {
        Brand brand = brandService.getBrandById(brandId);
         return ResponseEntity.ok(brand);
     }
 
-    @GetMapping(produces = "application/json", value = "/")
+    @GetMapping(produces = "application/json")
     public ResponseEntity<List<Brand>> getAllBrand(Pageable pageable) {
         Page page = brandService.getAll(pageable);
         return response(page);
     }
-
-    /*@PutMapping(value = "/{branId}/Model/{modelId}", produces = "application/json")
-    public void addModelToBrand(@PathVariable Integer  branId, @PathVariable Integer modelId) {
-        brandService.addModelInBrand(branId,modelId);
-    }*/
 
     private ResponseEntity response(List list, Page page) {
         HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;

@@ -29,12 +29,20 @@ public class ResidenceServiceTest
 
     @Mock
     private ResidenceRepository residenceRepository;
+    private MeterService meterService;
+    private TariffService tariffService;
+    private AddressService addressService;
+    private ClientService clientService;
 
     @BeforeEach
     public void setUp()
     {
         residenceRepository = mock(ResidenceRepository.class);
-        residenceService =  new ResidenceService(residenceRepository);
+        meterService = mock(MeterService.class);
+        tariffService = mock(TariffService.class);
+        addressService = mock(AddressService.class);
+        clientService = mock(ClientService.class);
+        residenceService =  new ResidenceService(residenceRepository,meterService,tariffService,addressService,clientService);
     }
 
     @Test
