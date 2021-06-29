@@ -35,7 +35,7 @@ public class InvoiceController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{invoiceId}")
-                .buildAndExpand("Invoice/"+i.getInvoiceId())
+                .buildAndExpand(i.getInvoiceId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
