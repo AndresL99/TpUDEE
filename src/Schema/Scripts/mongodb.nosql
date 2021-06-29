@@ -1,0 +1,181 @@
+db.users.save(
+    {
+        "user_name": "johnDoe",
+        "password": "1234",
+        "first_name": "John",
+         "last_name": "Doe",
+         "is_admin": false
+    }
+
+);
+
+db.clients.save(
+     {
+        "id_client": 1,
+         "dni_client": 30111222,
+         "email_client": "johndoe@gmail.com",
+         "first_name_client": "John",
+         "last_name_client": "Doe",
+         "users": [{
+            "user_name": "JhonDoe",
+            "password": "1234",
+             "first_name": "John",
+             "last_name": "Doe",
+             "is_admin": false
+         }]
+     }
+);
+
+db.tariffs.save(
+    {
+        "id_tariff": 1,
+        "name": "Tarifa A",
+        "value": 1200.0
+    }
+);
+
+db.brands.save(
+    {
+        "id_brand": 1,
+        "brand": "BAW"
+    }
+);
+
+db.models.save(
+     {
+         "id_model": 1,
+         "model": "MEKWH5-45",
+         "brands":[{
+              "id_brand": 1,
+              "brand": "BAW"
+         }]
+     }
+);
+
+db.measurements.save(
+       {
+            "id_measurement": 1,
+            "measurement_date": "2021-05-05",
+            "kwh_measurement": 120.00,
+            "value": 1000.0
+       }
+);
+
+db.meters.save(
+    {
+        "id_meter": 1,
+        "serial_number": "aaa123",
+        "password": "1234",
+        "models":[{
+            "id_model": 1,
+            "model": "MEKWH5-45",
+            "brands":[{
+                "id_brand": 1,
+                "brand": "BAW"
+            }]
+        }],
+        "measurements":[{
+            "id_measurement": 1,
+            "measurement_date": "2021-05-05",
+            "kwh_measurement": 120.00,
+            "value": 1000.0
+        }]
+    }
+);
+
+db.residences.save(
+      {
+           "id_residence": 1,
+           "clients":[{
+                "id_client": 1,
+                "dni_client": 30111222,
+                "email_client": "johndoe@gmail.com",
+                "first_name_client": "John",
+                "last_name_client": "Doe",
+                "users": [{
+                    "user_name": "JhonDoe",
+                    "password": "1234",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "is_admin": false
+                }]
+           }],
+           "addresses":[{
+                "id_address": 1,
+                "name": "Avenida Siempre viva",
+                "number": 123
+           }],
+           "tariffs":[{
+                "id_tariff": 1,
+                "name": "Tarifa A",
+                "value": 1200.0
+           }],
+           "meters":[{
+                "id_meter": 1,
+                "serial_number": "aaa123",
+                "password": "1234",
+                "models":[{
+                       "id_model": 1,
+                       "model": "MEKWH5-45",
+                       "brands":[{
+                            "id_brand": 1,
+                            "brand": "BAW"
+                       }]
+                }]
+           }]
+      }
+);
+
+db.invoices.save(
+      {
+          "id_invoice": 1,
+          "is_paid": true,
+          "due_date": "2021-04-04",
+          "first_read": 120.0,
+          "last_read": 200.0,
+          "total_cons_kw": 220.0,
+          "initial_date": "2021-05-05",
+          "last_date": "2021-06-06",
+          "total_amount": 400.0,
+          "residences":[{
+                "id_residence": 1,
+           "clients":[{
+                "id_client": 1,
+                "dni_client": 30111222,
+                "email_client": "johndoe@gmail.com",
+                "first_name_client": "John",
+                "last_name_client": "Doe",
+                "users": [{
+                    "user_name": "JhonDoe",
+                    "password": "1234",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "is_admin": false
+                }]
+           }],
+           "addresses":[{
+                "id_address": 1,
+                "name": "Avenida Siempre viva",
+                "number": 123
+           }],
+           "tariffs":[{
+                "id_tariff": 1,
+                "name": "Tarifa A",
+                "value": 1200.0
+           }],
+           "meters":[{
+                "id_meter": 1,
+                "serial_number": "aaa123",
+                "password": "1234",
+                "models":[{
+                       "id_model": 1,
+                       "model": "MEKWH5-45",
+                       "brands":[{
+                            "id_brand": 1,
+                            "brand": "BAW"
+                       }]
+                }]
+           }]
+          }]
+      }
+);
