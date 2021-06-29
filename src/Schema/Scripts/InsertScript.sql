@@ -16,3 +16,6 @@ insert into meters(id_meter, id_model, id_measurement, serial_number, password) 
 
 insert into addresses(id_address, name_address, number_address) VALUES (1,'Avenida Colon',3333),(2,'Belgrano',5555),(3,'Cordoba',1111);
 insert into residences(id_client, id_address, id_tariff, id_meter) VALUES (1,2,3,1),(2,1,1,3),(3,3,1,2);
+insert into invoices(id_invoice, id_residence, is_paid, due_date, first_read, last_read, total_cons_kw, initial_date, last_date, total_amount) VALUES
+(1,1,true,DATE('2021-09-20'),1200.0,2000.0,3400.00,DATE('2021-07-05'),DATE('2021-08-21'),3500.0),
+(2,2,false,DATE('2021-09-02'),1000.0,1500.0,4000.0,DATE('2021-07-10'), DATE('2021-08-11'),5000.0);

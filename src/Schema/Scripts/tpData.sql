@@ -115,18 +115,20 @@ $$
 
 create index idx_clients_user_name on clients(user_name) using hash;
 create index idx_invoice_date on invoices(due_date) using btree;
-#create index idx_meter_measurement on meters(id_meter) using hash;
+create index idx_meter_measurement on meters(id_meter) using hash;
+create index idx_client on clients(id_client) using hash;
+create index idx_measurement_date on measurements(measurement_date) using hash ;
 
 drop procedure measure_date_user;
 delimiter $$
 create procedure measure_date_user(p_id_client int, p_start date, p_end date)
 begin
-select c.id_client,c.email_client,c.dni_client,c.first_name_client,c.last_name_client, me.id_meter AS id_meter,me.serial_number,mo.id_model,mo.model,b.brand,
+select c.id_client,c.email_client,c.dni_client,c.first_name_client,c.last_name_client, me.id_meter,me.serial_number,
        m.id_measurement,m.measurement_date,m.kwh_measurement,m.value from measurements m inner join meters me on me.id_meter = m.id_meter
-                                                                                         inner join models mo on mo.id_model= me.id_model inner join brands b on b.id_brand=mo.id_brand inner join residences r on r.id_meter = me.id_meter
+                                                                                         inner join residences r on r.id_meter = me.id_meter
                                                                                          inner join clients c on r.id_client = c.id_client where c.id_client = p_id_client and (m.measurement_date between p_start and p_end)
 group by m.id_measurement;
 end;
 $$
 
-call measure_date_user(2,'2021-01-01','2021-02-02');
+call measure_date_user(1,'2021-07-10','2021-08-11');
