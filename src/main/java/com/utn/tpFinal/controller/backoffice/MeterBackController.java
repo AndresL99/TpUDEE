@@ -1,6 +1,5 @@
 package com.utn.tpFinal.controller.backoffice;
 
-
 import com.utn.tpFinal.controller.AddressController;
 import com.utn.tpFinal.controller.MeterController;
 import com.utn.tpFinal.domain.Address;
@@ -26,65 +25,69 @@ import java.util.List;
 
 @Controller
 @RestController
-@RequestMapping("/Back/Address")
-public class AddressBackController {
+@RequestMapping("/Back/Meter")
+public class MeterBackController {
 
     /**
-     *3) Alta, baja y modificación de domicilios y medidores.
+     * 3) Alta, baja y modificación de domicilios y medidores.
      */
 
-    AddressController addressController;
 
+    MeterController meterController;
 
     @Autowired
-    public AddressBackController(AddressController addressController) {
-        this.addressController = addressController;
-
+    public MeterBackController(MeterController meterController) {
+        this.meterController = meterController;
     }
-    //add
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity addAddress(Authentication authentication,@RequestBody Address address) throws AddressExistException
+
+    //addmeter
+    @PostMapping()
+    public ResponseEntity addMeter(Authentication authentication,@RequestBody Meter meter) throws MeterExistException
     {
         verifyAuthBackOffice(authentication);
-        Address a = addressController.addAddress(address);
+        Meter m = meterController.addMeter(meter);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{addressId}")
-                .buildAndExpand("Address/"+a.getAddressId())
+                .path("/{meterId}")
+                .buildAndExpand("Meter/"+m.getMeterId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
-    //get all
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Address>> getAllAddress(Authentication authentication,Pageable pageable)
+    //getAll
+    @GetMapping()
+    public ResponseEntity<List<Meter>> getAllMeters(Authentication authentication,Pageable pageable)
     {
         verifyAuthBackOffice(authentication);
-        Page page = addressController.getAll(pageable);
+        Page page =meterController.getAllMeter(pageable);
         return response(page);
     }
     // get one
-    @GetMapping(value = "{addressId}", produces = "application/json")
-    public ResponseEntity<Address> getAddressById(Authentication authentication,@PathVariable("addressId") Integer addressId) throws AddressNotExistException
+    @GetMapping( "{meterId}")
+    public ResponseEntity<Meter> getMeterById(Authentication authentication,@PathVariable("meterId") Integer meterid) throws MeterNotExistException
     {
         verifyAuthBackOffice(authentication);
-        Address address = addressController.getAddressById(addressId);
-        return ResponseEntity.ok(address); }
+        Meter meter = meterController.getMeterById(meterid);
+        return ResponseEntity.ok(meter);
+    }
+
     //delete
-    @DeleteMapping("/{idAddress}")
-    public void deleteAddressById(Authentication authentication,@PathVariable Integer idAddress)
+    @DeleteMapping("/{idMeter}")
+    public void deleteMeterById(Authentication authentication,@PathVariable Integer idMeter)
     {
         verifyAuthBackOffice(authentication);
-        addressController.deleteAddressById(idAddress);
+        meterController.deleteMeterById(idMeter);
     }
     //update
-    @PutMapping("/addressId")
-    public ResponseEntity updateAddress(Authentication authentication,@PathVariable Integer addressId,
-                                        @RequestBody Address address)
+    @PutMapping("/meterId")
+    public ResponseEntity updateMeter(Authentication authentication,@PathVariable Integer meterId,
+                                        @RequestBody Meter meter)
     {
         verifyAuthBackOffice(authentication);
-        addressController.update(addressId,address);
+        meterController.update(meterId,meter);
         return ResponseEntity.accepted().build();
     }
+
+
 
     private ResponseEntity response(List list, Page page) {
         HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;

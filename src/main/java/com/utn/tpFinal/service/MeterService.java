@@ -55,4 +55,6 @@ public class MeterService {
         return meterRepository.findBySerialNumberAndPassword(serialNumber,password);
     }
 
+    public void update(Integer meterId, Meter meter) {
+    }
 }

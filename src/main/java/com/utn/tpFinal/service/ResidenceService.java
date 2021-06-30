@@ -1,8 +1,10 @@
 package com.utn.tpFinal.service;
 
+import com.utn.tpFinal.domain.Address;
 import com.utn.tpFinal.domain.Meter;
 import com.utn.tpFinal.domain.Residence;
 import com.utn.tpFinal.domain.Tariff;
+import com.utn.tpFinal.exception.AddressNotExistException;
 import com.utn.tpFinal.exception.ResidenceExistException;
 import com.utn.tpFinal.exception.ResidenceNotExistException;
 import com.utn.tpFinal.exception.TariffNotExistException;
@@ -84,5 +86,13 @@ public class ResidenceService {
         Residence r = getResidenceById(residenceId);
         r.setTariff(t);
         residenceRepository.save(r);
+    }
+
+    public void addAddres(Integer residenceId, Integer addressId)throws ResidenceNotExistException, AddressNotExistException {
+        Address a = addressService.getAddressById(addressId);
+        Residence r= getResidenceById(residenceId);
+        r.setAddress(a);
+        residenceRepository.save(r);
+
     }
 }

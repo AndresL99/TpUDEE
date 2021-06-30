@@ -1,6 +1,7 @@
 package com.utn.tpFinal.controller;
 
 import com.utn.tpFinal.domain.Residence;
+import com.utn.tpFinal.exception.AddressNotExistException;
 import com.utn.tpFinal.exception.ResidenceExistException;
 import com.utn.tpFinal.exception.ResidenceNotExistException;
 import com.utn.tpFinal.exception.TariffNotExistException;
@@ -67,6 +68,10 @@ public class ResidenceController {
     @PutMapping("/{residenceId}/Tariff/{tariffId}")
     public void addTariff(@PathVariable Integer residenceId, @PathVariable Integer tariffId) throws ResidenceNotExistException, TariffNotExistException {
         residenceService.addTariff(residenceId, tariffId);
+    }
+    @PutMapping("/{residenceId}/Address/{addressId}")
+    public void addAddres(@PathVariable Integer residenceId, @PathVariable Integer addressId) throws ResidenceNotExistException, AddressNotExistException {
+        residenceService.addAddres(residenceId, addressId);
     }
 
     /*public Page getResidenceByUser(Integer idClient, Pageable pageable)  {
