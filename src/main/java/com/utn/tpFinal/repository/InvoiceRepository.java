@@ -29,12 +29,12 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Integer> {
     Page<Invoice> findByClientBetweenDates(Integer idClient, Date start, Date end, Pageable pageable);
 
 
-    @Query(value = "SELECT * FROM INVOICE" +
-            "INNER JOIN RESIDENCE R" +
-            "ON I.residenceId =?2" +
-            "INNER JOIN CLIENT C" +
-            "ON C.userId =?1 " +
-            "WHERE paid = false  ", nativeQuery = true)
+    @Query(value = "SELECT i.* FROM invoices i" +
+            "JOIN residences r" +
+            "ON r.id_residence =i.id_residence "+
+            "JOIN clients c" +
+            "ON c.id_client =r.id_client " +
+            "WHERE paid = false AND  r.id_residence = :idResidences AND c.id_client = :idClient ", nativeQuery = true)
     Page<Invoice> findAllResidenceClientUserId(Integer idClient, Integer idResidences, Pageable pageable);
 
     //web 3
