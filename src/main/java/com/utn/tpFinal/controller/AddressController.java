@@ -30,7 +30,6 @@ public class AddressController {
 
     private AddressService addressService;
 
-    @Autowired
     private ConversionService conversionService;
 
     @Autowired

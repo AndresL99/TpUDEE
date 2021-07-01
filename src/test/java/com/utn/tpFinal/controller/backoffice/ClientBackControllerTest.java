@@ -17,15 +17,15 @@ import org.springframework.security.core.Authentication;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import static com.utn.tpFinal.Utils.TestUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -58,8 +58,8 @@ public class ClientBackControllerTest
     @Test
     public void getTopConsumersOk()
     {
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-06-06 20:12:30");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-06-25 10:05:10");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.now();
 
         Top10MoreConsumption top10MoreConsumption = mock(Top10MoreConsumption.class);
 
@@ -75,8 +75,8 @@ public class ClientBackControllerTest
     @Test
     public void getTopConsumersNoContent()
     {
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-06-06 20:12:30");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-06-25 10:05:10");
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.MAX;
 
         Top10MoreConsumption top10MoreConsumption = mock(Top10MoreConsumption.class);
 
@@ -95,8 +95,8 @@ public class ClientBackControllerTest
     public void getMesurementByResidenceAndRankTestOk()
     {
 
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-03-06 12:09:15");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-04-10 07:10:00");
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now();
         when(authentication.getPrincipal()).thenReturn(backOffice);
         when(measurementService.getMeasurementByResidenceAndRank(22,start,end,aPageable())).thenReturn(aMeasurementPage());
 
@@ -112,8 +112,8 @@ public class ClientBackControllerTest
     public void getMeaurementByResidenceAndRankTestNotContent() throws ParseException {
         Pageable pageable = PageRequest.of(5,10);
         Page<Measurement> pageM = mock(Page.class);
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-03-06 12:09:15");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-04-10 07:10:00");
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = LocalDateTime.now();
         when(authentication.getPrincipal()).thenReturn(backOffice);
         when(measurementService.getMeasurementByResidenceAndRank(aResidence().getResidenceId(),start,end,pageable)).thenReturn(Page.empty());
 

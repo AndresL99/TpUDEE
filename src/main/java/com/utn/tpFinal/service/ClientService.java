@@ -2,6 +2,7 @@ package com.utn.tpFinal.service;
 
 
 import com.utn.tpFinal.domain.Client;
+import com.utn.tpFinal.domain.dto.ClientDto;
 import com.utn.tpFinal.domain.projection.Top10MoreConsumption;
 import com.utn.tpFinal.exception.*;
 import com.utn.tpFinal.repository.ClientRepository;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class ClientService {
         }
     }
 
+
     public Client getClientById(Integer clientId)throws ClientNotExistException
     {
         return clientRepository.findById(clientId)
@@ -58,7 +61,7 @@ public class ClientService {
          clientRepository.deleteById(idUser);
     }
 
-    public List<Top10MoreConsumption> getTop10MoreConsumtion(Date from, Date to) {
+    public List<Top10MoreConsumption> getTop10MoreConsumtion(LocalDateTime from, LocalDateTime to) {
 
         return clientRepository.getTop10(from,to);
     }

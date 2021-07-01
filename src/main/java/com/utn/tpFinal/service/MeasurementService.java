@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -30,13 +31,13 @@ public class MeasurementService
         this.invoiceService = invoiceService;
     }
 
-    public Page<Measurement> getMeasurementByRank(Integer idClient, Date start, Date end, Pageable pageable){
+    public Page<Measurement> getMeasurementByRank(Integer idClient, LocalDateTime start, LocalDateTime end, Pageable pageable){
 
         return measurementRepository.getMeasuremtByRank(idClient,start,end,pageable);
     }
 
 
-    public Page<Measurement> getMeasurementByResidenceAndRank(Integer idResidence, Date start, Date end, Pageable pageable) {
+    public Page<Measurement> getMeasurementByResidenceAndRank(Integer idResidence, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
         return  measurementRepository.getMeasurementByResidenceAndRank(idResidence,start,end,pageable);
     }

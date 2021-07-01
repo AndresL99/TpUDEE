@@ -16,12 +16,12 @@ import static javax.persistence.CascadeType.ALL;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "Residences")
+@Table(name = "residences")
 public class Residence {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name = "residence_id")
+    @Column (name = "id_residence")
     private Integer residenceId;
 
 
@@ -43,7 +43,8 @@ public class Residence {
     @JsonBackReference
     private Tariff tariff;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "residence", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_invoice")
     private List<Invoice> invoiceList;
 
 

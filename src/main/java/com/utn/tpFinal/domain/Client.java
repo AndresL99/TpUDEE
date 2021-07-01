@@ -1,5 +1,7 @@
 package com.utn.tpFinal.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,12 +44,13 @@ public class Client
     @Column(name = "last_name_client")
     private String lastName;
 
-    @OneToOne
-    @JoinColumn(name = "user_name",foreignKey = @ForeignKey(name="fk_user_name"))
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_name",updatable = false)
     private User user;
 
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.LAZY)
-    private List<Residence> residenceList;
+    /*@OneToMany(cascade = CascadeType.ALL, mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<Residence> residenceList;*/
 
 }

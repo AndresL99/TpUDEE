@@ -1,19 +1,16 @@
 package com.utn.tpFinal.controller.backoffice;
 
-
-import com.utn.tpFinal.controller.AddressController;
 import com.utn.tpFinal.controller.MeterController;
-import com.utn.tpFinal.domain.Address;
+import com.utn.tpFinal.domain.Meter;
 import com.utn.tpFinal.domain.dto.UserDTO;
-import com.utn.tpFinal.exception.AddressExistException;
-import com.utn.tpFinal.exception.AddressNotExistException;
+import com.utn.tpFinal.exception.MeterExistException;
+import com.utn.tpFinal.exception.MeterNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,65 +19,63 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Back/Address")
-public class AddressBackController {
-
-    /**
-     *3) Alta, baja y modificación de domicilios y medidores.
-     */
-
-    AddressController addressController;
+@RequestMapping("/Back/Meter")
+public class MeterBackController
+{
     MeterController meterController;
 
     @Autowired
-    public AddressBackController(AddressController addressController, MeterController meterController) {
-        this.addressController = addressController;
+    public MeterBackController(MeterController meterController) {
         this.meterController = meterController;
     }
-    //add
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity addAddress(Authentication authentication,@RequestBody Address address) throws AddressExistException
+
+    //addmeter
+    @PostMapping()
+    public ResponseEntity addMeter(Authentication authentication, @RequestBody Meter meter) throws MeterExistException
     {
         verifyAuthBackOffice(authentication);
-        Address a = addressController.addAddress(address);
+        Meter m = meterController.addMeter(meter);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{addressId}")
-                .buildAndExpand("Address/"+a.getAddressId())
+                .path("/{meterId}")
+                .buildAndExpand("Meter/"+m.getMeterId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
-    //get all
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Address>> getAllAddress(Authentication authentication,Pageable pageable)
+    //getAll
+    @GetMapping()
+    public ResponseEntity<List<Meter>> getAllMeters(Authentication authentication, Pageable pageable)
     {
         verifyAuthBackOffice(authentication);
-        Page page = addressController.getAll(pageable);
+        Page page =meterController.getAllMeter(pageable);
         return response(page);
     }
     // get one
-    @GetMapping(value = "/{addressId}", produces = "application/json")
-    public ResponseEntity<Address> getAddressById(Authentication authentication,@PathVariable("addressId") Integer addressId) throws AddressNotExistException
+    @GetMapping( "{meterId}")
+    public ResponseEntity<Meter> getMeterById(Authentication authentication,@PathVariable("meterId") Integer meterid) throws MeterNotExistException
     {
         verifyAuthBackOffice(authentication);
-        Address address = addressController.getAddressById(addressId);
-        return ResponseEntity.ok(address); }
+        Meter meter = meterController.getMeterById(meterid);
+        return ResponseEntity.ok(meter);
+    }
+
     //delete
-    @DeleteMapping("/{idAddress}")
-    public void deleteAddressById(Authentication authentication,@PathVariable Integer idAddress)
+    @DeleteMapping("/{idMeter}")
+    public void deleteMeterById(Authentication authentication,@PathVariable Integer idMeter)
     {
         verifyAuthBackOffice(authentication);
-        addressController.deleteAddressById(idAddress);
+        meterController.deleteMeterById(idMeter);
     }
     //update
-    @PutMapping("/addressId")
-    public ResponseEntity updateAddress(Authentication authentication,@PathVariable Integer addressId,
-                                        @RequestBody Address address)
+    @PutMapping("/meterId")
+    public ResponseEntity updateMeter(Authentication authentication,@PathVariable Integer meterId,
+                                      @RequestBody Meter meter)
     {
         verifyAuthBackOffice(authentication);
-        addressController.update(addressId,address);
+        meterController.update(meterId,meter);
         return ResponseEntity.accepted().build();
     }
+
 
 
     private ResponseEntity response(List list, Page page) {
@@ -113,7 +108,4 @@ public class AddressBackController {
         if(!((UserDTO) authentication.getPrincipal()).getAdmin())
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,"Access forbidden for your profile.");
     }
-
-
-
 }

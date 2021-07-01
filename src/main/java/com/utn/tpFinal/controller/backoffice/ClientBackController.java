@@ -48,17 +48,17 @@ public class ClientBackController {
     }
 
     //4) Consulta de facturas impagas por cliente y domicilio.
-    @GetMapping("{idClient}/residences/{idResidence}/invoices/deb")
-    public ResponseEntity<List<Invoice>> getDebInvoices(Authentication authentication,@PathVariable Integer idClient, @PathVariable Integer idResidences, Pageable pageable){
+    @GetMapping("/{idResidence}/clients/{idClient}/deb")
+    public ResponseEntity<List<Invoice>> getDebInvoices(Authentication authentication,@PathVariable Integer idResidences,@PathVariable Integer idClient, Pageable pageable){
         verifyAuthBackOffice(authentication);
-        Page<Invoice>invoicesDeb=invoiceService.findAllResidenceClientUserId(idClient,idResidences,pageable);
+        Page<Invoice>invoicesDeb=invoiceService.findAllResidenceClientUserId(idResidences,idClient,pageable);
         return response(invoicesDeb);
     }
 
     //5) Consulta 10 clientes más consumidores en un rango de fechas.
     @GetMapping("/client/top10")
-    public ResponseEntity<List<Top10MoreConsumption>>getTopTenConsumtion(Authentication authentication,@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date from,
-                                                                         @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date to){
+    public ResponseEntity<List<Top10MoreConsumption>>getTopTenConsumtion(Authentication authentication,@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime from,
+                                                                         @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime to){
         verifyAuthBackOffice(authentication);
         List<Top10MoreConsumption>top=clientService.getTop10MoreConsumtion(from,to);
         return response(top);
@@ -66,10 +66,10 @@ public class ClientBackController {
 
 
     //6) Consulta de mediciones de un domicilio por rango de fechas
-    @GetMapping("/residence/{idResidence}")
-    public ResponseEntity<List<Measurement>> getMesurementByResidenceAndRank(Authentication authentication,@PathVariable Integer idResidence,
-                                                                             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date start,
-                                                                             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date end,
+    @GetMapping("/residence/{idResidence}")/*OK*/
+    public ResponseEntity<List<Measurement>>getMesurementByResidenceAndRank(Authentication authentication,@PathVariable Integer idResidence,
+                                                                             @RequestParam("start") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
+                                                                             @RequestParam("end") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
                                                                              Pageable pageable) {
         verifyAuthBackOffice(authentication);
         Page<Measurement> mesurements = measurementService.getMeasurementByResidenceAndRank(idResidence, start, end, pageable);

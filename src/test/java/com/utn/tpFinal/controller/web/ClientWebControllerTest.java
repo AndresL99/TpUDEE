@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.ListResourceBundle;
@@ -68,8 +69,8 @@ public class ClientWebControllerTest
     @Test
     public void getMeasurementByRankTestOk()
     {
-        Date start = new SimpleDateFormat("MM-yyyy").parse("05-2021");
-        Date end = new SimpleDateFormat("MM-yyyy").parse("06-2021");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.MAX;
 
         when(authentication.getPrincipal()).thenReturn(UserDTO.builder().username("User1").build());
         when(clientService.getByUserName("User1")).thenReturn(Client.builder().clientId(1).build());
@@ -85,8 +86,8 @@ public class ClientWebControllerTest
     @Test
     public void getInvoiceRankDateOk()
     {
-        Date start = new SimpleDateFormat("MM-yyyy").parse("03-2021");
-        Date end = new SimpleDateFormat("MM-yyyy").parse("04-2021");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.MAX;
         when(authentication.getPrincipal()).thenReturn(UserDTO.builder().username("User1").build());
         when(clientService.getByUserName("User1")).thenReturn(Client.builder().clientId(10).build());
         when(invoiceService.getInvoiceByRank(10,start,end,aPageable())).thenReturn(anInvoicePage());
@@ -101,8 +102,8 @@ public class ClientWebControllerTest
     @Test
     public void getInvoiceDebtOk()
     {
-        Date start = new SimpleDateFormat("MM-yyyy").parse("02-2021");
-        Date end = new SimpleDateFormat("MM-yyyy").parse("03-2021");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.MAX;
         when(authentication.getPrincipal()).thenReturn(UserDTO.builder().username("User1").build());
         when(clientService.getByUserName("User1")).thenReturn(Client.builder().clientId(10).build());
         when(invoiceService.getInvoiceDebt(10,aPageable())).thenReturn(anInvoicePage());
@@ -116,8 +117,8 @@ public class ClientWebControllerTest
     @SneakyThrows
     @Test
     public void getConsumptionAndCostOk() {
-        Date start = new SimpleDateFormat("MM-yyyy").parse("02-2021");
-        Date end = new SimpleDateFormat("MM-yyyy").parse("03-2021");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.now();
         when(authentication.getPrincipal()).thenReturn(UserDTO.builder().username("User1").build());
         when(clientService.getByUserName("User1")).thenReturn(Client.builder().clientId(10).build());
         when(invoiceService.getTotalConsumeAndCost(10, start, end, aPageable())).thenReturn(aConsumeptionAndCostDTOPage());

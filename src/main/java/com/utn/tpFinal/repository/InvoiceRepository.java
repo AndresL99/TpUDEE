@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Repository
 public interface InvoiceRepository extends JpaRepository<Invoice,Integer> {
@@ -19,25 +18,28 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Integer> {
             "JOIN CLIENTS C ON R.dni_client = C.dni_client",nativeQuery = true)
     Page<Invoice> findByDNIClient(@Param("dni_client")Integer dni, Pageable pageable);
 
-    @Query(value = "SELECT I FROM Invoice" +
-            "JOIN Residence R " +
-            "ON I.residenceId = R.residenceId" +
-            "JOIN Client C" +
-            "ON R.client.userId = c.userId " +
-            "WHERE c.userId = :idClient"+
-            "AND I.initialDate BETWEEN :start AND :end",nativeQuery = true)
-    Page<Invoice> findByClientBetweenDates(Integer idClient, Date start, Date end, Pageable pageable);
+    @Query(value = "SELECT i.* FROM invoices i " +
+            "JOIN residences r ON i.id_residence = r.id_residence " +
+            "JOIN clients c ON r.id_client = c.id_client " +
+            "WHERE c.id_client = :idClient AND i.initial_date BETWEEN :start AND :end " ,nativeQuery = true)
+    Page<Invoice> findByClientBetweenDates(Integer idClient, LocalDateTime start, LocalDateTime end , Pageable pageable);
+    Page<Invoice>findByResidence_Client_ClientIdAndInitialDateBetween(@Param("idClient") Integer idClient, @Param("start") LocalDateTime start, @Param("end") LocalDateTime end, Pageable pageable);
 
 
-    @Query(value = "SELECT * FROM INVOICE" +
-            "INNER JOIN RESIDENCE R" +
-            "ON I.residenceId =?2" +
-            "INNER JOIN CLIENT C" +
-            "ON C.userId =?1 " +
-            "WHERE paid = false  ", nativeQuery = true)
-    Page<Invoice> findAllResidenceClientUserId(Integer idClient, Integer idResidences, Pageable pageable);
+    @Query(value = "SELECT i.* FROM invoices i " +
+            "JOIN residences r " +
+            "ON r.id_residence =i.id_residence "+
+            "WHERE i.is_paid = false AND  r.id_residence = :idResidences AND r.id_client = :idClient ", nativeQuery = true)
+    Page<Invoice> findAllResidenceClientUserId(Integer idResidences, Integer idClient,Pageable pageable);
+
 
     //web 3
-    Page<Invoice> findByResidence_ClientAndIsPaidIsFalse(Integer idClient, Pageable pageable);
+    //Page<Invoice> findByResidence_ClientAndIsPaidIsFalse(Integer idClient, Pageable pageable);
+    Page<Invoice>findByResidence_Client_ClientIdAndAndIsPaidFalse(Integer idClient,Pageable pageable);
 
+    @Query(value = "SELECT i.* FROM invoices i "+
+                    "JOIN residences r ON i.id_residence = r.id_residence "+
+                    "JOIN clients c ON r.id_client = c.id_client "+
+                    "WHERE i.is_paid = false AND c.id_client = :idClient AND r.id_residence = :idResidence", nativeQuery = true)
+    Page<Invoice>findAllByResidence_ResidenceIdAndAndResidence_ClientClientIdAndAndIsPaidFalse(Integer idClient,Integer idResidence,Pageable pageable);
 }

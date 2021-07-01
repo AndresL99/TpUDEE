@@ -27,14 +27,16 @@ public class Meter {
     @Column(name = "password")
     private String password;
 
-    @ManyToOne
-    @JoinColumn(name = "id_model", nullable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_model" ,updatable = false)
+    @JsonBackReference
     private Model model;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "meter", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_measurement")
     private List<Measurement> measurementList;
 
-    @OneToOne(mappedBy = "meter",fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Residence residence;
 

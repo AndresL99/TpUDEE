@@ -33,7 +33,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/*
+
 public class AdressControllerTest extends AbstractControllerTest
 {
     private AddressService addressService;
@@ -118,4 +118,3 @@ public class AdressControllerTest extends AbstractControllerTest
         verify(addressService,times(1)).update(aAddress().getAddressId(),aAddress());
     }
 }
-*/

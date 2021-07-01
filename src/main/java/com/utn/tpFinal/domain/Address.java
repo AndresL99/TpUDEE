@@ -1,5 +1,6 @@
 package com.utn.tpFinal.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name= "address" )
+@Table(name= "addresses" )
 public class Address {
 
     @Id
@@ -23,8 +24,9 @@ public class Address {
     @Column(name = "number_address")
     private Integer streetNumber;
 
-    @OneToOne(mappedBy = "address",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "address",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonIgnore
     private Residence residence;
 
 

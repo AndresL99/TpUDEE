@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -27,21 +28,20 @@ public class Measurement {
     private Integer measurementId;
 
     @Column(name= "measurement_date")
-    private LocalDate dateMeasurement;
+    private LocalDateTime dateMeasurement;
 
     @Column(name = "kwh_measurement")
     private Float measurementKwh;
 
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "id_meter", nullable = false, updatable = false)
-    private Meter meter;
-
+    private Meter meter;*/
 
     public static Measurement builderM(MeasurementSenderDTO measureSenderDto)  throws ParseException {
         SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return Measurement.builder()
                 .measurementKwh(measureSenderDto.getKw())
-                .dateMeasurement(LocalDate.parse(measureSenderDto.getDate()))
+                .dateMeasurement(LocalDateTime.parse(measureSenderDto.getDate()))
                 .build();
     }
 }

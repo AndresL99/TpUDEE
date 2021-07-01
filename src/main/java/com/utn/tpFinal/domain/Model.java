@@ -30,6 +30,7 @@ public class Model {
 
 
     @OneToOne
+    @JoinColumn(name = "id_brand")
     private Brand brand;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "model", fetch = FetchType.LAZY)

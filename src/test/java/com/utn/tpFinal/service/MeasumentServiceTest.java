@@ -12,14 +12,14 @@ import org.mockito.quality.Strictness;
 import org.springframework.data.domain.Page;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static com.utn.tpFinal.Utils.TestUtils.aMeasurementPage;
 import static com.utn.tpFinal.Utils.TestUtils.aPageable;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -45,13 +45,13 @@ public class MeasumentServiceTest
     @Test
     public void getMeasurementByRankOk()
     {
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-05-05 20:00:15");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-06-06 10:15:10");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.MAX;
         when(measurementRepository.getMeasuremtByRank(10,start,end,aPageable())).thenReturn(aMeasurementPage());
 
         Page<Measurement>measurementPage = measurementService.getMeasurementByRank(10,start,end,aPageable());
 
-        assertEquals(aMeasurementPage(),measurementPage);
+        assertEquals(aMeasurementPage().getContent().get(0).getMeasurementId(),measurementPage.getContent().get(0).getMeasurementId());
 
     }
 
@@ -59,15 +59,13 @@ public class MeasumentServiceTest
     @Test
     public void getMeasurementByResidenceAndRankOk()
     {
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-06-05 20:00:15");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-07-06 10:15:10");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.MAX;
 
         when(measurementRepository.getMeasurementByResidenceAndRank(22,start,end,aPageable())).thenReturn(aMeasurementPage());
 
         Page<Measurement>measurementPage = measurementService.getMeasurementByResidenceAndRank(22,start,end,aPageable());
 
-        assertEquals(aMeasurementPage(),measurementPage);
+        assertEquals(aMeasurementPage().getContent().get(0).getMeasurementId(),measurementPage.getContent().get(0).getMeasurementId());
     }
-
-
 }

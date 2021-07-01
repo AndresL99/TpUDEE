@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -57,20 +58,21 @@ public class InvoiceService {
         return invoiceRepository.findAll(pageable);
     }
 
-    public Page<Invoice> getInvoiceByRank(Integer idClient, Date start, Date end, Pageable pageable) {
+    public Page<Invoice> getInvoiceByRank(Integer idClient, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
         return invoiceRepository.findByClientBetweenDates(idClient,start,end,pageable);
     }
 
-    public Page<Invoice> findAllResidenceClientUserId(Integer idClient, Integer idResidences, Pageable pageable) {
-        return invoiceRepository.findAllResidenceClientUserId(idClient,idResidences,pageable);
+    //4 Back
+    public Page<Invoice> findAllResidenceClientUserId(Integer idResidences,Integer idClient, Pageable pageable) {
+        return invoiceRepository.findAllByResidence_ResidenceIdAndAndResidence_ClientClientIdAndAndIsPaidFalse(idResidences,idClient,pageable);
     }
 
     public Page<Invoice> getInvoiceDebt(Integer idClient, Pageable pageable) {
-        return invoiceRepository.findByResidence_ClientAndIsPaidIsFalse(idClient,pageable);
+        return invoiceRepository.findByResidence_Client_ClientIdAndAndIsPaidFalse(idClient,pageable);
     }
 
-    public Page<ConsumeptionAndCostDTO> getTotalConsumeAndCost(Integer idClient, Date start, Date end, Pageable pageable) {
+    public Page<ConsumeptionAndCostDTO> getTotalConsumeAndCost(Integer idClient, LocalDateTime start, LocalDateTime end, Pageable pageable) {
 
         List<Invoice> invoices = (List<Invoice>) invoiceRepository.findByClientBetweenDates(idClient,start,end,pageable);
         ConsumeptionAndCostDTO consume = new ConsumeptionAndCostDTO();

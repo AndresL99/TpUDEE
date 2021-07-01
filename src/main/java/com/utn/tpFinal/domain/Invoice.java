@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -28,7 +29,7 @@ public class Invoice {
 
     @NonNull
     @Column(name="due_date")
-    private LocalDate duelDate;
+    private LocalDateTime duelDate;
 
     @NonNull
     @Column(name="first_read")
@@ -44,20 +45,19 @@ public class Invoice {
 
     @NonNull
     @Column(name="initial_date")
-    private LocalDate initialDate;
+    private LocalDateTime initialDate;
 
     @NonNull
     @Column(name="last_date")
-    private LocalDate lastDate;
+    private LocalDateTime lastDate;
 
     @NonNull
     @Column(name="total_amount")
     private Float totalAmount;
 
     @NonNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade =  CascadeType.ALL)
     @JoinColumn(name = "id_residence",nullable = false, updatable = false)
-    @JsonIgnore
     @JsonBackReference
     private Residence residence;
 

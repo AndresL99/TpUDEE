@@ -36,7 +36,7 @@ public class ModelController {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{modelId}")
-                .buildAndExpand(model.getModelId())
+                .buildAndExpand("Model/"+model.getModelId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

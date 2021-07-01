@@ -27,7 +27,6 @@ public class Tariff {
     @Column(name ="value")
     private Float tariffValue;
 
-    @OneToOne( fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_residence")
-    private Residence residence;
+    /*@OneToOne(fetch = FetchType.EAGER)
+    private Residence residence;*/
 }

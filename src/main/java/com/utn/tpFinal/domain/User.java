@@ -35,7 +35,8 @@ public class User
     @Column(name = "last_name")
     private String lastName;
 
-    @Type(type = "org.hibernate.type.NumericBooleanType")
     @Column(name = "is_admin")
     private Boolean admin;
+
+
 }

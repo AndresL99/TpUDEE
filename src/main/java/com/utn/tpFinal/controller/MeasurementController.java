@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
-@Controller
 @RestController
 @RequestMapping("/measurements")
 public class MeasurementController

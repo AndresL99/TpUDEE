@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -101,8 +102,8 @@ public class InvoiceServiceTest
     @Test
     public void getInvoiceByRankOk()
     {
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-04-04 10:10:10");
-        Date end =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2021-04-21 05:05:15");
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end =  LocalDateTime.MAX;
         Integer id_client = aClient().getClientId();
         when(invoiceRepository.findByClientBetweenDates(id_client,start,end,aPageable())).thenReturn(anInvoicePage());
         Page<Invoice>invoicePage = invoiceService.getInvoiceByRank(id_client,start,end,aPageable());
@@ -113,9 +114,9 @@ public class InvoiceServiceTest
     @Test
     public void getInvoiceDebtTestOk()
     {
-        when(invoiceRepository.findByResidence_ClientAndIsPaidIsFalse(10,aPageable())).thenReturn(anInvoicePage());
+        when(invoiceRepository.findByResidence_Client_ClientIdAndAndIsPaidFalse(10,aPageable())).thenReturn(anInvoicePage());
         Page<Invoice>invoicePage = invoiceService.getInvoiceDebt(10,aPageable());
-        assertEquals(anInvoicePage(),invoicePage);
+        assertEquals(anInvoicePage().getContent().get(0).getInvoiceId(),invoicePage.getContent().get(0).getInvoiceId());
     }
 
     @Test
@@ -125,21 +126,21 @@ public class InvoiceServiceTest
         Integer id_residence = aResidence().getResidenceId();
         when(invoiceRepository.findAllResidenceClientUserId(id_client,id_residence,aPageable())).thenReturn(anInvoicePage());
         Page<Invoice>invoicePage = invoiceService.findAllResidenceClientUserId(id_client,id_residence,aPageable());
-        assertEquals(anInvoicePage(),invoicePage);
+        assertEquals(anInvoicePage().getContent().get(0).getInvoiceId(),invoicePage.getContent().get(0).getInvoiceId());
     }
 
-    /*@SneakyThrows
+    @SneakyThrows
     @Test
     public void getTotalConsumeAndCostTesOk()
     {
         Integer id_client = aClient().getClientId();
-        Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2020-05-05 20:15:23");
-        Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2020-06-05 19:15:10");
+        LocalDateTime start = LocalDateTime.MIN;
+        LocalDateTime end = LocalDateTime.MAX;
 
         when(invoiceRepository.findByClientBetweenDates(id_client,start,end,aPageable())).thenReturn(anInvoicePage());
 
         Page<ConsumeptionAndCostDTO>consumeptionAndCostDTOS = invoiceService.getTotalConsumeAndCost(id_client,start,end,aPageable());
 
         assertEquals(aConsumeptionAndCostDTOPage().getContent().get(0).getTotalCost(),consumeptionAndCostDTOS.getContent().get(0).getTotalCost());
-    }*/
+    }
 }

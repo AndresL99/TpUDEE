@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class TestUtils
 {
     public static Tariff aTariff()
     {
-        return Tariff.builder().tariffId(10).tariffName("Tarifa1").tariffValue(10.000F).residence(aResidence()).build();
+        return Tariff.builder().tariffId(10).tariffName("Tarifa1").tariffValue(10.000F).build();
         //return new Tariff(1,"Pequeña demanda",20.000F,aResidence());
     }
 
@@ -57,7 +58,7 @@ public class TestUtils
     public static Client aClient()
     {
         //List<Residence>residences = new ArrayList<>();
-        return Client.builder().clientId(10).dni(20111333).user(aUser()).email("adasd@gmail.com").firstName("Jaime").lastName("Fulanito").residenceList(new ArrayList<>()).build();
+        return Client.builder().clientId(10).dni(20111333).email("adasd@gmail.com").firstName("Jaime").lastName("Fulanito").build();
         //return new Client(10,"aaaaaa",34567890,"Jaime","Lorenzo",aUser(),residences);
     }
 
@@ -70,7 +71,7 @@ public class TestUtils
 
     public static Invoice anInvoice()
     {
-        return Invoice.builder().invoiceId(10).isPaid(false).duelDate(LocalDate.of(2021,5,21)).firstReading(10.0F).lastReading(20.0F).totalConsumptionKwh(100.0F).initialDate(LocalDate.of(2021,06,06)).lastDate(LocalDate.now()).totalAmount(100.0F).residence(aResidence()).build();
+        return Invoice.builder().invoiceId(10).isPaid(false).duelDate(LocalDateTime.now()).firstReading(10.0F).lastReading(20.0F).totalConsumptionKwh(100.0F).initialDate(LocalDateTime.now()).lastDate(LocalDateTime.now()).totalAmount(100.0F).residence(aResidence()).build();
         /*return new Invoice(5,
                 true,
                 LocalDate.of(2021,7,21),
@@ -120,7 +121,7 @@ public class TestUtils
 
     public static Measurement aMeasurement()
     {
-        return new Measurement(1,LocalDate.now(),10.0F,aMeter());
+        return new Measurement(1,LocalDateTime.now(),10.0F);
     }
 
     public static Pageable aPageable()
