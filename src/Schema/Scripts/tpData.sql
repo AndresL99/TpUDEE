@@ -21,29 +21,38 @@ begin
     declare p_initCons float;
     declare p_lastCons float;
     declare id_tariff int;
-    declare value_tariff float;
+    declare valueM float;
+    declare vIdMeasurement_initial float;
+    declare vIdMeasurement_final float;
 
 
 
 select serial_number into p_id_meter from meters  where id_measurement = p_id_measurement;
 
-select min(initial_date) into p_initial_date
-from invoices where isnull(id_invoice) and id_residence=p_id_residence limit 1;
+select m.id_measurement into vIdMeasurement_initial
+from invoices i inner join residences r2 on i.id_residence = r2.id_residence
+                inner join meters me on r2.id_meter = me.id_meter inner join measurements m on me.id_measurement = m.id_measurement
+where i.id_residence = p_id_residence order by m.measurement_date limit 1;
 
-select max(last_date) into p_last_date from invoices
-where isnull(id_invoice) and id_residence = p_id_residence limit 1;
+select id_measurement into vIdMeasurement_final from measurements m inner join meters me on m.id_measurement = me.id_measurement
+where me.id_meter = p_id_meter;
 
-select id_client into p_id_client from residences where id_residence = p_id_residence;
-select max(total_cons_kw) into p_initCons from invoices where initial_date = p_initial_date and id_residence=p_id_residence;
-select max(total_cons_kw) into p_lastCons from invoices where last_date = p_last_date and id_residence = p_id_residence;
-select id_tariff into id_tariff from residences where id_residence = p_id_residence;
-select value into value_tariff from tariffs where tariffs.id_tariff = id_tariff;
+if(vIdMeasurement_final is not null) then
+	    if (vIdMeasurement_initial is not null) then
 
-set p_totalCon = p_lastCons-p_initCons;
-    set p_totalPrice= p_tariffPrice * p_totalCon;
+		if (vIdMeasurement_final != vIdMeasurement_initial) then
+		    set valueM = (select kwh_measurement from measurements where id_measurement = vIdMeasurement_final) -
+			      (select kwh_measurement from measurements where id_measurement = vIdMeasurement_initial);
+else
+end if;
 
-    if p_initial_date is not null then
-        insert into invoices (id_residence,is_paid,due_date,first_read,last_read,total_cons_kw,initial_date,last_date,total_amount) values (p_id_residence,p_is_paid,NOW(),p_initCons,p_lastCons,p_totalCon,p_initial_date,p_last_date,p_totalPrice);
+else
+		set valueM = (select kwh_measurement from measurements where id_measurement =vIdMeasurement_final);
+end if;
+
+insert into invoices(id_residence, is_paid, due_date, first_read, last_read, total_cons_kw,initial_date,last_date,total_amount)
+values (p_id_residence,true,'2021-08-10', vIdMeasurement_initial, vIdMeasurement_final, valueM,CURDATE(),'2022-02-02',
+        (select value from tariffs where tariffs.id_tariff = id_tariff) * valueM);
 end if;
 end;
 $$
