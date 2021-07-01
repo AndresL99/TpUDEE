@@ -41,7 +41,7 @@ public class ResidenceController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping(value = "{residenceId}", produces = "application/json")
+    @GetMapping(value = "/{residenceId}", produces = "application/json")
     public ResponseEntity<Residence> getResidenceById(@PathVariable("residenceId") Integer residenceId) throws ResidenceNotExistException
     {
         Residence residence = residenceService.getResidenceById(residenceId);

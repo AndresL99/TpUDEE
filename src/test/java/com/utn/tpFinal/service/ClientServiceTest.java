@@ -33,6 +33,7 @@ public class ClientServiceTest
     private UserRepository userRepository;
     private ClientService clientService;
 
+
     @BeforeEach
     public void setUp()
     {

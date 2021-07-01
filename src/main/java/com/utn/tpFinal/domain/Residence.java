@@ -24,6 +24,8 @@ public class Residence {
     @Column (name = "id_residence")
     private Integer residenceId;
 
+    @Column(name = "name")
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "id_client", nullable = false, updatable = false)

@@ -2,6 +2,7 @@ package com.utn.tpFinal.service;
 
 
 import com.utn.tpFinal.domain.Client;
+import com.utn.tpFinal.domain.Residence;
 import com.utn.tpFinal.domain.dto.ClientDto;
 import com.utn.tpFinal.domain.projection.Top10MoreConsumption;
 import com.utn.tpFinal.exception.*;
@@ -70,5 +71,12 @@ public class ClientService {
     {
         return clientRepository.findClientByUser_Username(username);
     }
+
+    /*public void addResidences(Integer idClient, Integer idResidence) throws ClientNotExistException, ResidenceNotExistException {
+        Client c = getClientById(idClient);
+        Residence r = residenceService.getResidenceById(idResidence);
+        c.getResidenceList().add(r);
+        clientRepository.save(c);
+    }*/
 
 }

@@ -12,10 +12,19 @@ insert into clients(id_client, user_name, dni_client, email_client, first_name_c
 insert into users(user_name,password,first_name,last_name,is_admin) value ('admin','1234','Admin','Admin',true);
 
 insert into measurements(id_measurement, measurement_date, kwh_measurement, value) VALUES (666,now(),45.00,100.00),(213,now(),120.00,40.00),(233,now(),50.00,200.00);
+insert into measurements (id_measurement, measurement_date, kwh_measurement, value)
+values (99,'2021-05-05',1000.0,2000.0),(13,'2021-06-06',500.0,750.0),(55,'2021-07-21',200.0,100.0);
 insert into meters(id_meter, id_model, id_measurement, serial_number, password) VALUES (1,1,666,'221j3hido4','andres123'),(2,1,233,'2424n4hina','root'),(3,2,213,'52j2jjo22j5','1234');
+insert into meters(id_model, id_measurement, serial_number, password) VALUES (1,99,'aaaa222','1234'),(1,99,'aaaa222','1234'),(1,55,'aaaa222','1234');
 
 insert into addresses(id_address, name_address, number_address) VALUES (1,'Avenida Colon',3333),(2,'Belgrano',5555),(3,'Cordoba',1111);
-insert into residences(id_client, id_address, id_tariff, id_meter) VALUES (1,2,3,1),(2,1,1,3),(3,3,1,2);
+insert into residences(name,id_client, id_address, id_tariff, id_meter) VALUES ('Departamento Ramon',1,2,3,1),('Casa de John',2,1,1,3),('Local de Pablo',3,3,1,2);
+
 insert into invoices(id_invoice, id_residence, is_paid, due_date, first_read, last_read, total_cons_kw, initial_date, last_date, total_amount) VALUES
-(1,1,true,DATE('2021-09-20'),1200.0,2000.0,3400.00,DATE('2021-07-05'),DATE('2021-08-21'),3500.0),
-(2,2,false,DATE('2021-09-02'),1000.0,1500.0,4000.0,DATE('2021-07-10'), DATE('2021-08-11'),5000.0);
+(1,1,true,'2021-09-20',1200.0,2000.0,3400.00,'2021-07-05','2021-08-21',3500.0),
+(2,2,false,'2021-09-02',1000.0,1500.0,4000.0,'2021-07-10','2021-08-11',5000.0);
+
+insert into residences (name,id_client, id_address, id_tariff, id_meter) VALUES ('Departamento de John',2,1,1,5),('Local de Ramon',1,2,2,4);
+
+insert into invoices(id_invoice, id_residence, is_paid, due_date, first_read, last_read, total_cons_kw, initial_date, last_date, total_amount) VALUE(3,2,true,'2021-08-12',150.00,200.00,3500.00,'2021-07-29','2021-08-01',4000.0);
+

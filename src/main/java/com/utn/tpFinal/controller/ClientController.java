@@ -5,10 +5,7 @@ import com.utn.tpFinal.domain.PostResponse;
 import com.utn.tpFinal.domain.Tariff;
 import com.utn.tpFinal.domain.User;
 import com.utn.tpFinal.domain.dto.ClientDto;
-import com.utn.tpFinal.exception.ClientExistException;
-import com.utn.tpFinal.exception.ClientNotExistException;
-import com.utn.tpFinal.exception.TariffExistException;
-import com.utn.tpFinal.exception.TariffNotExistException;
+import com.utn.tpFinal.exception.*;
 import com.utn.tpFinal.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -66,6 +63,11 @@ public class ClientController {
     void deleteClientByUserName(@PathVariable Integer idUser){
         clientService.deleteById(idUser);
     }
+
+    /*@PutMapping("/{idClinet}/residences/{idResidence}")
+    public void addResidences(@PathVariable Integer idClient, @PathVariable Integer idResidence) throws ResidenceNotExistException, ClientNotExistException {
+        clientService.addResidences(idClient, idResidence);
+    }*/
 
     private ResponseEntity response(List list, Page page) {
         HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;

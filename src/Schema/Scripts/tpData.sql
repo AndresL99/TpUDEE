@@ -10,16 +10,7 @@ delimiter $$
 create procedure m_billing(IN p_id_residence INT)
 begin
     declare p_id_meter int;
-    declare p_id_client int;
-    declare p_initial_date date;
-    declare p_last_date date;
-    declare p_totalPrice float;
-    declare p_tariffPrice float;
     declare p_id_measurement int;
-    declare p_totalCon float;
-    declare p_is_paid bool;
-    declare p_initCons float;
-    declare p_lastCons float;
     declare id_tariff int;
     declare valueM float;
     declare vIdMeasurement_initial float;
@@ -40,10 +31,9 @@ where me.id_meter = p_id_meter;
 if(vIdMeasurement_final is not null) then
 	    if (vIdMeasurement_initial is not null) then
 
-		if (vIdMeasurement_final != vIdMeasurement_initial) then
+		    if (vIdMeasurement_final != vIdMeasurement_initial) then
 		    set valueM = (select kwh_measurement from measurements where id_measurement = vIdMeasurement_final) -
 			      (select kwh_measurement from measurements where id_measurement = vIdMeasurement_initial);
-else
 end if;
 
 else
@@ -110,11 +100,45 @@ drop trigger tau_tariff;
 delimiter $$
 create trigger tau_tariff after update on tariffs for each row
 begin
-    update measurements m inner join residences r on r.id_meter = m.id_meter set m.value=(m.value/old.value)*new.value where r.id_tariff = old.id_tariff;
+    update measurements m inner join meters me on m.id_measurement = me.id_measurement inner join residences r on me.id_meter = r.id_meter set m.value = (m.value/old.value)*new.value
+    where r.id_tariff = old.id_tariff;
+    call adjustment_invoice (old.value,new.value,old.id_tariff);
 end;
 $$
 
-
+DELIMITER $$
+CREATE PROCEDURE adjustment_invoice(oldPrice FLOAT,newPrice FLOAT, id_tariff INT)
+BEGIN
+    declare newTotal float;
+    declare vIdMeter int;
+    declare vId_residence int;
+    declare vFinished integer default 0;
+    declare vTotal_cons_kw float;
+    declare cur_residences cursor for select residences.id_meter, residences.id_client from residences;
+declare continue handler for not found set vFinished = 1;
+open cur_residences;
+invoices_r:
+    loop
+        fetch cur_residences into vIdMeter,vId_residence;
+        if vFinished = 1 then
+            LEAVE invoices_r;
+end if;
+        set newTotal = null;
+        set vTotal_cons_kw = null;
+SELECT SUM(total_cons_kw)
+FROM invoices i
+         inner join residences r on i.id_residence = r.id_residence
+         inner join meters m on r.id_meter = m.id_meter
+where r.id_meter = vIdMeter;
+SELECT (vTotal_cons_kw*newPrice)-(vTotal_cons_kw*oldPrice) INTO newTotal;
+IF (newTotal IS NOT NULL) THEN
+            INSERT INTO invoices (id_residence,is_paid,last_date,total_amount)
+             VALUES (vId_residence, true ,CURDATE(),newTotal);
+END IF;
+END LOOP invoices_r;
+CLOSE cur_residences;
+END
+$$
 
 #Punto 4.
 #Generar las estructuras necesarias para dar soporte a las consultas de mediciones
@@ -128,12 +152,14 @@ create index idx_meter_measurement on meters(id_meter) using hash;
 create index idx_client on clients(id_client) using hash;
 create index idx_measurement_date on measurements(measurement_date) using hash ;
 
+
+
 drop procedure measure_date_user;
 delimiter $$
 create procedure measure_date_user(p_id_client int, p_start date, p_end date)
 begin
 select c.id_client,c.email_client,c.dni_client,c.first_name_client,c.last_name_client, me.id_meter,me.serial_number,
-       m.id_measurement,m.measurement_date,m.kwh_measurement,m.value from measurements m inner join meters me on me.id_meter = m.id_meter
+       m.id_measurement,m.measurement_date,m.kwh_measurement,m.value from measurements m inner join meters me on me.id_measurement = m.id_measurement
                                                                                          inner join residences r on r.id_meter = me.id_meter
                                                                                          inner join clients c on r.id_client = c.id_client where c.id_client = p_id_client and (m.measurement_date between p_start and p_end)
 group by m.id_measurement;

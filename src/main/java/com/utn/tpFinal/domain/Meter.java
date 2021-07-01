@@ -36,9 +36,9 @@ public class Meter {
     @JoinColumn(name = "id_measurement")
     private List<Measurement> measurementList;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    /*@OneToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Residence residence;
+    private Residence residence;*/
 
 
 }
