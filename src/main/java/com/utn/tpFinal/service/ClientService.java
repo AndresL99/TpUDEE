@@ -2,6 +2,7 @@ package com.utn.tpFinal.service;
 
 
 import com.utn.tpFinal.domain.Client;
+import com.utn.tpFinal.domain.Residence;
 import com.utn.tpFinal.domain.projection.Top10MoreConsumption;
 import com.utn.tpFinal.exception.*;
 import com.utn.tpFinal.repository.ClientRepository;
@@ -16,6 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -23,12 +25,14 @@ public class ClientService {
     private ClientRepository clientRepository;
     private UserRepository userRepository;
     private ModelMapper modelMapper;
+    private ResidenceService residenceService;
 
     @Autowired
-    public ClientService(ClientRepository clientRepository, ModelMapper modelMapper,UserRepository userRepository) {
+    public ClientService(ClientRepository clientRepository, UserRepository userRepository, ModelMapper modelMapper, ResidenceService residenceService) {
         this.clientRepository = clientRepository;
-        this.modelMapper = modelMapper;
         this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+        this.residenceService = residenceService;
     }
 
     public Client addClient(Client newClient)throws ClientExistException
@@ -68,4 +72,10 @@ public class ClientService {
         return clientRepository.findClientByUser_Username(username);
     }
 
+    public void addResidences(Integer idClient, Integer idResidence) throws ClientNotExistException, ResidenceNotExistException {
+        Client c = getClientById(idClient);
+        Residence r = residenceService.getResidenceById(idResidence);
+        c.getResidenceList().add(r);
+        clientRepository.save(c);
+    }
 }
