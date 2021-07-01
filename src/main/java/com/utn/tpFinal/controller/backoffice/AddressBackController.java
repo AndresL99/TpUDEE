@@ -4,9 +4,12 @@ package com.utn.tpFinal.controller.backoffice;
 import com.utn.tpFinal.controller.AddressController;
 import com.utn.tpFinal.controller.MeterController;
 import com.utn.tpFinal.domain.Address;
+import com.utn.tpFinal.domain.Meter;
 import com.utn.tpFinal.domain.dto.UserDTO;
 import com.utn.tpFinal.exception.AddressExistException;
 import com.utn.tpFinal.exception.AddressNotExistException;
+import com.utn.tpFinal.exception.MeterExistException;
+import com.utn.tpFinal.exception.MeterNotExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,12 +33,12 @@ public class AddressBackController {
      */
 
     AddressController addressController;
-    MeterController meterController;
+
 
     @Autowired
-    public AddressBackController(AddressController addressController, MeterController meterController) {
+    public AddressBackController(AddressController addressController) {
         this.addressController = addressController;
-        this.meterController = meterController;
+
     }
     //add
     @PostMapping(consumes = "application/json")
@@ -81,7 +84,6 @@ public class AddressBackController {
         addressController.update(addressId,address);
         return ResponseEntity.accepted().build();
     }
-
 
     private ResponseEntity response(List list, Page page) {
         HttpStatus status = !list.isEmpty() ? HttpStatus.OK : HttpStatus.NO_CONTENT;

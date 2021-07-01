@@ -32,7 +32,7 @@ import static org.mockito.Mockito.times;
 public class AddressBackControllerTest
 {
     private AddressController addressController;
-    private MeterController meterController;
+
     private AddressBackController addressBackController;
     Authentication authentication;
     private UserDTO backOffice;
@@ -43,8 +43,7 @@ public class AddressBackControllerTest
         authentication = mock(Authentication.class);
         backOffice = aBackOffice();
         addressController = mock(AddressController.class);
-        meterController = mock(MeterController.class);
-        addressBackController = new AddressBackController(addressController,meterController);
+        addressBackController = new AddressBackController(addressController);
     }
 
     @Test
